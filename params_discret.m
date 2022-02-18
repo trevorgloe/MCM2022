@@ -9,13 +9,14 @@ Cr = 0.1;   % wheel resistance coefficient
 Cd = 0.1;   % air drag coefficient
 CP = 100;   % rider critical power
 Wp = 100;   % rider anaerobic work capacity
+tau_w = 0.01;   % W' recovery time constant
 
 biker.m = m;
 biker.Cr = Cr;
 biker.Cd = Cd;
 biker.CP = CP;
 biker.Wp = Wp;
-
+biker.tau_w = tau_w;
 
 %% Define course parameters
 L = 100;    %total course length [m]

@@ -19,13 +19,8 @@ dx = L/N;
 fun = @(v)dx.*sum(1./v);
 A = 
 b = 
-Aeq = 
-beq = 
-lb =
-ub =
-nonlcon = 
 
-x = fmincon(fun,xvals,A,b,Aeq,beq,lb,ub,nonlcon);
+x = fmincon(fun,xvals,A,b);
 
 %% Ex
 % fun = @(x)100*(x(2)-x(1)^2)^2 + (1-x(1))^2;

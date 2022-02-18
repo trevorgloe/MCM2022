@@ -1,4 +1,4 @@
-function [v] = sqp_run(course, biker, disc)
+function [v,x] = sqp_run(course, biker, disc)
 % takes in rider and course struct and runs SQP based model
     
     %% Get params

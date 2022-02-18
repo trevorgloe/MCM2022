@@ -1,7 +1,8 @@
 clear
 close all
+clc
 
-plotflag = 1;
+plotflag = 0;
 
 params_discret
 sqp_solve

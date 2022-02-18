@@ -4,31 +4,33 @@
 g = 9.81;   % acceleration due to gravity [m/s^2]
 
 %% Define biker parameters
-m = 1;      % rider mass [kg]
+m = 66.25;      % rider mass [kg]
 Cr = 0.1;   % wheel resistance coefficient
-Cd = 0.1;   % air drag coefficient
-CP = 100;   % rider critical power
-Wp = 100;   % rider anaerobic work c
+A = 0.194;   % frontal area [m^2]
+CP = 142.8;   % rider critical power
+Wcap = 24235;   % rider anaerobic work capacity
+tau_w = 0.01;   % W' recovery time constant
+Pm = 100; % max power [TBD units]***
 
 biker.m = m;
 biker.Cr = Cr;
-biker.Cd = Cd;
+biker.A = A;
+biker.CP = CP;
+biker.Wcap = Wcap;
+biker.tau_w = tau_w;
+biker.Pm = Pm;
 
 %% Define course parameters
-L = 100;    %total course length [m]
+L = 44.2e3;    %total course length [m]
 phi = [1 2 3 4 6 7 8 7 6 5 4 3 2 1];   %angle of the slope of the course over the length of the course
+rho = 1.1455; % density at location [kg/m^3]
 
 %structure to store course parameters
 course.L = L;
 course.phi = phi;
+course.rho = rho;
 
 %% Discretize course into lil chunky bits
-N = 100;    %number of chunks in discretization
 
-x_vals = linspace(0,L,N);
-phi_dis = interp1(linspace(0,L,length(phi)),phi,x_vals);
-
-dx = x_vals(end)-x_vals(end-1);
-
-c2_array = m*g*(phi_dis + Cr);
+disc.N = 100;    %number of chunks in discretization
 

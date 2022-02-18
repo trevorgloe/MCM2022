@@ -4,13 +4,13 @@
 g = 9.81;   % acceleration due to gravity [m/s^2]
 
 %% Define biker parameters
-m = 1;      % rider mass [kg]
+m = 66.25;      % rider mass [kg]
 Cr = 0.1;   % wheel resistance coefficient
-A = 10;   % frontal area [TBD units]***
-CP = 100;   % rider critical power
-Wcap = 100;   % rider anaerobic work capacity
-tau_w = 0.01;   % W' recovery time constant
-Pm = 100; % max power [TBD units]***
+A = 0.194;   % frontal area [m^2]
+CP = 142.8;   % rider critical power [Watts]
+Wcap = 24235;   % rider anaerobic work capacity [J]
+tau_w = 580;   % W' recovery time constant
+Pm = 350; % max power [Watts]
 
 biker.m = m;
 biker.Cr = Cr;
@@ -21,9 +21,9 @@ biker.tau_w = tau_w;
 biker.Pm = Pm;
 
 %% Define course parameters
-L = 100;    %total course length [m]
+L = 44.2e3;    %total course length [m]
 phi = [1 2 3 4 6 7 8 7 6 5 4 3 2 1];   %angle of the slope of the course over the length of the course
-rho = 0.1; % density at location [TBD units]***
+rho = 1.1455; % density at location [kg/m^3]
 
 %structure to store course parameters
 course.L = L;

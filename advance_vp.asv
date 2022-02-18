@@ -1,0 +1,15 @@
+function [outputArg1,outputArg2] = advance_vp(s,params,t)
+%ADVANCE_VP advances the state vector based on the dynamical system
+% the state s = [P v x]
+P = s(1);
+v = s(2);
+x = s(3);
+
+dx = v;
+
+delta = interp1(params.psi_xv
+dv = Ptot(
+
+
+end
+

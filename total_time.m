@@ -1,0 +1,36 @@
+%% model for total race time based on rider power output over the race
+
+% from https://link.springer.com/article/10.1007/s12283-014-0153-3
+% rider power given by P vector
+% rider struct should have everything by a few parameters
+
+Cd = biker.Cd;     % drag coefficient
+
+Crr = 0.001;            % tyre rolling resistance
+Cs = 1;             % scrubbing coefficient
+
+psi = ones(1,length(P));    % track banking angle
+Cbr = 0.001;            % coefficient of bearing rolling resistance
+rb = 0.1;           % radius of the bearing
+
+time_calc_params.Cd = Cd;
+time_calc_params.Crr = Crr;
+time_calc_params.Cs = Cs;
+time_calc_params.rb = rb;
+time_calc_params.Cbr = Cbr;
+time_calc_params.m = biker.m;
+time_calc_params.g = 9.81;
+time_calc_params.rw = 0.5;      % [m] wheel radius
+time_calc_params.psi = psi;
+time_calc_params.psi_xvals = linspace(0,L,length(psi)); % x values corresponding to the psi values appearing at the same point in the indexing
+
+time_calc_params.Papplied = P;
+time_calc_params.P_xvals = linspace(0,L,length(P));
+
+ic = [0.001 0]';
+
+[tout data] = ode45(@(t,s)advance_vp(t,s,time_calc_params),[0 100],ic);
+
+figure
+plot(tout,data(:,2))
+

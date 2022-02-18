@@ -2,7 +2,7 @@ clear
 close all
 clc
 
-plotflag = 0;
+plotflag = 1;
 
 params_discret
 sqp_solve

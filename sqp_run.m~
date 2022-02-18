@@ -4,7 +4,7 @@ function [output] = sqp_run(course, biker)
     %% Get params
     %***
     dx = L/N;
-    vvals
+    
     
     %% F function
     fun = @(v) dx.*sum(1./v);
@@ -18,7 +18,7 @@ function [output] = sqp_run(course, biker)
             dvdt(ii) = (v(ii) - v(ii-1))/(dx*v(ii));
         end
         
-        P = c1.*v + c2 + c3.*dvdt; % eq constraint
+        P = c1.*v + c2 + c3*dvdt; % eq constraint
         
         if P > Pm % ineq constraint 1
             P = Pm;
@@ -37,7 +37,7 @@ function [output] = sqp_run(course, biker)
             innersum(jj) = sum( (1-delta(P(jj))) * (P(jj)-CP) * (dx/v(jj)) );
         end
         
-        Wcap - sum(innersum*exp(-delta*(x./(v.*tau_w)))*(dx./v)) == 0; % ineq constraint 2 
+        Wcap - sum(innersum*exp(-delta*(x***./(v.*tau_w)))*() % ineq constraint 2 
     end
     
     %% fmincon arguments

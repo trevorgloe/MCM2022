@@ -8,7 +8,7 @@ m = 1;      % rider mass [kg]
 Cr = 0.1;   % wheel resistance coefficient
 Cd = 0.1;   % air drag coefficient
 CP = 100;   % rider critical power
-Wp = 100;   % rider anaerobic work capacity
+Wcap = 100;   % rider anaerobic work capacity
 tau_w = 0.01;   % W' recovery time constant
 
 biker.m = m;
@@ -27,12 +27,11 @@ course.L = L;
 course.phi = phi;
 
 %% Discretize course into lil chunky bits
-N = 100;    %number of chunks in discretization
 
-x_vals = linspace(0,L,N);
-phi_dis = interp1(linspace(0,L,length(phi)),phi,x_vals);
+disc.N = 100;    %number of chunks in discretization
 
-dx = x_vals(end)-x_vals(end-1);
+disc.x = linspace(0,L,N);
+disc.phi_dis = interp1(linspace(0,L,length(phi)),phi,x);
 
-c2_array = m*g*(phi_dis + Cr);
+disc.c2_array = m*g*(phi_dis + Cr);
 

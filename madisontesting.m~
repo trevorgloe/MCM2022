@@ -17,10 +17,15 @@ params_discret
 
 dx = L/N;
 fun = @(v)dx.*sum(1./v);
-A = 
-b = 
+A = eye(N);
+b = ones(N,1)*1000;
+Aeq = [];
+beq = 
+lb =
+ub =
+nonlcon = 
 
-x = fmincon(fun,xvals,A,b);
+x = fmincon(fun,xvals,A,b,Aeq,beq,lb,ub,nonlcon);
 
 %% Ex
 % fun = @(x)100*(x(2)-x(1)^2)^2 + (1-x(1))^2;

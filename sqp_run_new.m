@@ -208,7 +208,7 @@ function [v,P,x] = sqp_run_new(course, biker, disc)
 %     nonlcon =@ constraint; %,x,Pm,N,Wcap,CP,c1,c2,c3,tau_w);
     
     %% Call fmincon
-    options = optimoptions('fmincon','Algorithm','sqp','Display','iter','MaxFunctionEvaluations',1e8,'StepTolerance',1e-10,'MaxIterations',1e8);
+    options = optimoptions('fmincon','Algorithm','sqp','Display','iter','MaxFunctionEvaluations',1e8,'StepTolerance',1e-10,'MaxIterations',10e3);
     s = fmincon(fun,s0,A,b,Aeq,beq,lb,ub,@constraint,options);
     v = s(1:N);
     P = s(N+1:end);

@@ -5,7 +5,7 @@ g = 9.81;   % acceleration due to gravity [m/s^2]
 
 %% Define biker parameters
 % m = 66.25;      % rider mass [kg]
-m = 66.25;
+m = 45.0;
 Cr = 0.005;   % wheel resistance coefficient
 A = 0.194*0.1;   % frontal area [m^2]   (drag coefficient of 0.1 is also in there)
 % CP = 142.8;   % rider critical power [Watts]

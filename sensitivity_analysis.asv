@@ -1,0 +1,23 @@
+% analyze results of sensitivity study
+
+m = 4;      % number of data points for the parameter
+% first parse all data collected
+all_P = zeros(m,N);
+all_v = zeros(m,N);
+all_m = zeros(1,m)
+
+Folders = dir(fullfile('mass_sensitivity','*.mat*'));
+cd mass_sensivity
+
+for sim = 1:m
+    Files = dir(fullfile(Folder(sim+2).name),'
+    old = cd(Folder(sim))
+    load(Files(3*file))
+    load(Files(3*file-1))
+    load(Files(3*file-2))
+    
+    all_P(sim,:)=P;
+    all_v(sim,:)=v;
+    biker = all_params{2};
+    all_m(sim)=biker.m;
+    

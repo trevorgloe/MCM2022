@@ -25,11 +25,16 @@ phi_dis = interp1(linspace(0,L,length(phi)),phi,x);
 g = 9.8; % m/s
 
 c1 = 0.5*rho*A;% air drag coefficient *** get equation
-c2 = m.*g.*(phi_dis + Cr);
+c2 = m.*g.*(sind(phi_dis) + Cr);
 c3 = m; % get eq ***
 
-% power
-P = (c1*v + c2.*v + c3*[diff(v) 0]).*v;
+dvdt(1) =  (v(1))/(dx*v(1));
+for ii = 2:N
+    dvdt(ii) = (v(ii) - v(ii-1))/(dx*v(ii));
+end
+% ineq constraint 1
+P = (c1.*v + c2 + c3.*dvdt).*v; 
+
 
 % total time
 Tf = cumtrapz(x,1./v)

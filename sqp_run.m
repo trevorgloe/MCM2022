@@ -19,7 +19,8 @@ function [v,x] = sqp_run(course, biker, disc)
     N = disc.N;
     
     dx = L/N;
-    v0 = 0.001*ones(1,N);
+%     v0 = 5*linspace(0.1,1,N);
+    v0 = 10*ones(1,N);
     x = linspace(0,L,N);
     phi_dis = interp1(linspace(0,L,length(phi)),phi,x);
     g = 9.8; % m/s
@@ -42,7 +43,10 @@ function [v,x] = sqp_run(course, biker, disc)
         P = (c1.*v + c2 + c3.*dvdt).*v; 
         % P <= Pm;
         c = P - Pm*ones(1,N);
-        
+%         disp(max(P))
+        if c > 0
+            disp('c not satisfied')
+        end
         % define delta 
         function d = delta(P,CP)
             if P < CP
@@ -79,10 +83,28 @@ function [v,x] = sqp_run(course, biker, disc)
         end        
         
         % eq constraint 2 
+%         for jj = 1:N
+%             innersum(jj) = sum( (1-delta(P(jj),CP)) * (P(jj)-CP) * (dx/v(jj)) );
+%         end
+        Wexp = 0;
         for jj = 1:N
-            innersum(jj) = sum( (1-delta(P(jj),CP)) * (P(jj)-CP) * (dx/v(jj)) );
+            Wexp = Wexp + (1-delta(P(jj),CP))*(P(jj)-CP)*dx/v(jj);
         end
-         ceq = Wcap - sum(innersum.*exp(-delta(P,CP*ones(1,N)).*(top_x./(v.*tau_w))).*(dx./v)); 
+%         ceq = Wcap - sum(innersum.*exp(-delta(P,CP*ones(1,N)).*(top_x./(v.*tau_w))).*(dx./v)); 
+%         disp(Wexp)
+%         ceq = Wcap - Wexp;
+%         disp(ceq)
+        ceq = [];
+%         if isnan(c)
+%             disp('AHHHHH')
+%             disp(c)
+
+%         disp(sum(c<ones(1,N)*Pm))
+        if isnan(ceq)
+            disp('AHHHHH')
+            disp(ceq)
+%             disp(v)
+        end
     end
     
     %% fmincon arguments
@@ -94,9 +116,11 @@ function [v,x] = sqp_run(course, biker, disc)
     ub = [];%ones(1,N)*30;
 %     ub(1) = 0.001;
     
-    nonlcon =@ constraint; %,x,Pm,N,Wcap,CP,c1,c2,c3,tau_w);
+%     nonlcon =@ constraint; %,x,Pm,N,Wcap,CP,c1,c2,c3,tau_w);
     
     %% Call fmincon
-    options = optimoptions('fmincon','Algorithm','sqp');
-    v = fmincon(fun,v0,A,b,Aeq,beq,lb,ub,nonlcon,options);
+    options = optimoptions('fmincon','Algorithm','sqp','Display','iter','MaxFunctionEvaluations',1e8);
+    v = fmincon(fun,v0,A,b,Aeq,beq,lb,ub,@constraint,options);
+    disp('test')
+    
 end

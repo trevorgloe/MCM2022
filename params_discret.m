@@ -22,7 +22,8 @@ biker.Pm = Pm;
 
 %% Define course parameters
 L = 44.2e3;    %total course length [m]
-phi = [1 2 3 4 6 7 8 7 6 5 4 3 2 1];   %angle of the slope of the course over the length of the course
+% phi = [1 2 3 4 6 7 8 7 6 5 4 3 2 1];   %angle of the slope of the course over the length of the course
+phi = [0 0 0 0 0 0 0];
 rho = 1.1455; % density at location [kg/m^3]
 
 %structure to store course parameters
@@ -32,5 +33,5 @@ course.rho = rho;
 
 %% Discretize course into lil chunky bits
 
-disc.N = 100;    %number of chunks in discretization
+disc.N = 120;    %number of chunks in discretization
 

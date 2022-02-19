@@ -37,4 +37,4 @@ P = (c1.*v + c2 + c3.*dvdt).*v;
 
 
 % total time
-Tf = cumtrapz(x,1./v)
+Tf = cumtrapz(x,1./v);

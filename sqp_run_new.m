@@ -1,4 +1,4 @@
-function [v,x] = sqp_run(course, biker, disc)
+function [v,x] = sqp_run_new(course, biker, disc)
 % takes in rider and course struct and runs SQP based model
     
     %% Get params
@@ -19,8 +19,10 @@ function [v,x] = sqp_run(course, biker, disc)
     N = disc.N;
     
     dx = L/N;
-%     v0 = 20*linspace(0.1,1,N);
-    v0 = 10*ones(1,N);
+    v0 = 20*linspace(0.5,1,N);
+%     v0 = 10*ones(1,N);
+    P0 = 100*ones(1,N);
+    s0 = [v0 P0];
     x = linspace(0,L,N);
     phi_dis = interp1(linspace(0,L,length(phi)),phi,x);
     g = 9.8; % m/s
@@ -30,19 +32,22 @@ function [v,x] = sqp_run(course, biker, disc)
     c3 = m; % get eq ***
     
     %% F function
-    fun = @(v) dx.*sum(1./v);
+    fun = @(s) dx.*sum(1./s(1:N));
     
     %% Constraint funct
-    function [c,ceq] = constraint(v)%,x,Pm,N,Wcap,CP,c1,c2,c3,tau_w)
+    function [c,ceq] = constraint(s)%,x,Pm,N,Wcap,CP,c1,c2,c3,tau_w)
+        v = s(1:N);
         % Backward difference approx for dvdt
         dvdt(1) =  (v(1))/(dx*v(1));
         for ii = 2:N
             dvdt(ii) = (v(ii) - v(ii-1))/(dx*v(ii));
         end
         % ineq constraint 1
-        P = (c1.*v + c2 + c3.*dvdt).*v; 
+        Pcalc = (c1.*v + c2 + c3.*dvdt).*v; 
+        P = s(N+1:end);
         % P <= Pm;
-        c = P - Pm*ones(1,N);
+%         c = P - Pm*ones(1,N);
+        c = [];
 %         disp(max(P))
         if c > 0
             disp('c not satisfied')
@@ -87,10 +92,12 @@ function [v,x] = sqp_run(course, biker, disc)
 %                 changes = [changes ii];
 %             end
 %         end
+        x2 = repmat(x(1:30),1,ceil(length(x)/30));
+        shifted_x = x2(1:N);
         
         Wptot = Wcap;
 %         Wexp = 0;
-        Wptot = Wcap - sum((1-delta_v).*(P-CP)*dx);
+        Wptot = Wcap - sum((1-delta_v+delta_v.*exp(-shifted_x./(v*tau_w))).*(P-CP)*dx);
         
 %         if length(changes)==0
 %             % no changes throughout the ride
@@ -139,7 +146,7 @@ function [v,x] = sqp_run(course, biker, disc)
 %             end
 %         end
         
-        ceq = Wptot;
+        ceq = [Wptot P-Pcalc];
         % eq constraint 2 
 %         for jj = 1:N
 %             innersum(jj) = sum( (1-delta(P(jj),CP)) * (P(jj)-CP) * (dx/v(jj)) );
@@ -154,7 +161,7 @@ function [v,x] = sqp_run(course, biker, disc)
 % %         ceq = Wcap - sum(innersum.*exp(-delta(P,CP*ones(1,N)).*(top_x./(v.*tau_w))).*(dx./v)); 
 % %         disp(Wexp)
 
-        disp(ceq)
+%         disp(ceq)
 %         ceq = [];
 %         if isnan(c)
 %             disp('AHHHHH')
@@ -169,19 +176,35 @@ function [v,x] = sqp_run(course, biker, disc)
     end
     
     %% fmincon arguments
-    A = eye(N);
-    b = ones(1,N)*30;
+    % create difference matrix
+    A = eye(2*N);
+    for n = 1:N
+        if n==N
+            row=[zeros(1,N) zeros(1,N)];
+        else
+            row = [zeros(1,N) zeros(1,N)];
+            row(n) = 1;
+            row(n+1) = -1;
+        end
+        A(n,:)=row;
+    end
+    
+    b = [ones(1,N)*10 ones(1,N)*Pm];
     Aeq = [];
     beq = [];
-    lb = zeros(1,N);
+    lb = zeros(1,2*N);
     ub = [];%ones(1,N)*30;
+    ub = [ones(1,N)*30 ones(1,N)*Pm];
+    ub(1) = 0.1;
 %     ub(1) = 0.001;
     
 %     nonlcon =@ constraint; %,x,Pm,N,Wcap,CP,c1,c2,c3,tau_w);
     
     %% Call fmincon
-    options = optimoptions('fmincon','Algorithm','sqp','Display','iter','MaxFunctionEvaluations',1e8,'StepTolerance',1e-10);
-    v = fmincon(fun,v0,A,b,Aeq,beq,lb,ub,@constraint,options);
+    options = optimoptions('fmincon','Algorithm','sqp','Display','iter','MaxFunctionEvaluations',1e8,'StepTolerance',1e-10,'MaxIterations',1e8);
+    s = fmincon(fun,s0,A,b,Aeq,beq,lb,ub,@constraint,options);
+    v = s(1:N);
+    P = s(N+1:end);
     disp('test')
     
 end

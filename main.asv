@@ -1,0 +1,43 @@
+clear
+close all
+clc
+
+plotflag = 1;
+
+params_discret
+sqp_solve
+convert_v
+
+if plotflag == 1
+    plotting
+end
+
+%% Get params
+    
+    m = biker.m;
+    Cr = biker.Cr;
+%     Cd = biker.Cd;
+    CP = biker.CP;
+    Wcap = biker.Wcap;
+    tau_w = biker.tau_w;
+    A = biker.A;
+    Pm = biker.Pm;
+    
+    L = course.L;
+    phi = course.phi;
+    rho = course.rho;
+    
+    N = disc.N;
+    
+    dx = L/N;
+    v0 = 20*linspace(0.1,1,N);
+%     v0 = 10*ones(1,N);
+    x = linspace(0,L,N);
+    phi_dis = interp1(linspace(0,L,length(phi)),phi,x);
+    g = 9.8; % m/s
+    
+    c1 = 0.5*rho*A;% air drag coefficient *** get equation
+    c2 = m.*g.*(sind(phi_dis) + Cr);
+    c3 = m; % get eq ***
+    
+    Wexp = calcWexp(v,c1,c2,c3,Wcap,tau_w,CP,L,dx,N,x,q)

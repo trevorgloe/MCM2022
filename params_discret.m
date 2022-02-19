@@ -5,7 +5,7 @@ g = 9.81;   % acceleration due to gravity [m/s^2]
 
 %% Define biker parameters
 m = 66.25;      % rider mass [kg]
-Cr = 0.1;   % wheel resistance coefficient
+Cr = 0.001;   % wheel resistance coefficient
 A = 0.194;   % frontal area [m^2]
 CP = 142.8;   % rider critical power [Watts]
 Wcap = 24235;   % rider anaerobic work capacity [J]

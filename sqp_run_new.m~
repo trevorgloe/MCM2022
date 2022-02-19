@@ -5,7 +5,7 @@ function [v,P,x] = sqp_run_new(course, biker, disc)
     
     m = biker.m;
     Cr = biker.Cr;
-    CdA = biker.CdA;
+%     Cd = biker.Cd;
     CP = biker.CP;
     Wcap = biker.Wcap;
     tau_w = biker.tau_w;
@@ -19,14 +19,17 @@ function [v,P,x] = sqp_run_new(course, biker, disc)
     N = disc.N;
     
     dx = L/N;
+%     v0 = 20*linspace(0.5,1,N);
+%     v0 = 10*ones(1,N);
     v0 = 20*rand(1,N);
+%     P0 = 100*ones(1,N);
     P0 = 150*rand(1,N);
     s0 = [v0 P0];
     x = linspace(0,L,N);
     phi_dis = interp1(linspace(0,L,length(phi)),phi,x);
     g = 9.8; % m/s
     
-    c1 = 0.5*rho*CdA;% air drag coefficient *** get equation
+    c1 = 0.5*rho*A;% air drag coefficient *** get equation
     c2 = m.*g.*(sind(phi_dis) + Cr);
     
     % assume wheel is flat disk with mass mw and radius rw
@@ -96,8 +99,7 @@ function [v,P,x] = sqp_run_new(course, biker, disc)
     ub(1) = 0.1;
    
     %% Call fmincon
-    options = optimoptions('fmincon','Algorithm','sqp','MaxFunctionEvaluations',1e8,'StepTolerance',1e-10,'MaxIterations',10e3);
-    % to display iterations :'Display','iter'
+    options = optimoptions('fmincon','Algorithm','sqp','Display','iter','MaxFunctionEvaluations',1e8,'StepTolerance',1e-10,'MaxIterations',10e3);
     s = fmincon(fun,s0,A,b,Aeq,beq,lb,ub,@constraint,options);
     v = s(1:N);
     P = s(N+1:end);

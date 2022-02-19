@@ -17,9 +17,9 @@ biker.m = m;
 biker.Cr = Cr;
 biker.A = A;
 biker.CP = CP;
-% biker.Wcap = Wcap;
+biker.Wcap = Wcap;
 biker.tau_w = tau_w;
-biker.Pm = Pm;
+% biker.Pm = Pm;
 
 %% Define course parameters
 L = 13e3;    %total course length [m]
@@ -39,12 +39,13 @@ disc.N = 100;    %number of chunks in discretization
 N = disc.N;
 
 % mvec = linspace(50,70,4);
-Wcapvec = linspace(5000,25000,10);
+% Wcapvec = linspace(5000,25000,10);
 % tau_wvec = linspace(400,600,10);
+Pmvec = linspace(300,380,10);
 for i=1:length(Wcapvec)
     % run the model 3 times with random initial conditions and take the
     % best run
-    biker.Wcap = Wcapvec(i);
+    biker.Pm = Pmvec(i);
     time_values = zeros(1,3);
     Ptot = zeros(3,N);
     vtot = zeros(3,N);

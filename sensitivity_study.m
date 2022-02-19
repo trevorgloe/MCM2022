@@ -12,7 +12,7 @@ A = 0.194*0.1;   % frontal area [m^2]   (drag coefficient of 0.1 is also in ther
 CP = 180;
 Wcap = 24235;   % rider anaerobic work capacity [J]
 tau_w = 500;   % W' recovery time constant
-% Pm = 350; % max power [Watts]
+Pm = 350; % max power [Watts]
 
 % biker.m = m;
 biker.Cr = Cr;

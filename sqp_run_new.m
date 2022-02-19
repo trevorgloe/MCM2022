@@ -9,7 +9,6 @@ function [v,P,x] = sqp_run_new(course, biker, disc)
     CP = biker.CP;
     Wcap = biker.Wcap;
     tau_w = biker.tau_w;
-    A = biker.A;
     Pm = biker.Pm;
     
     L = course.L;

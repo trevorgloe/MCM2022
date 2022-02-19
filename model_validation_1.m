@@ -1,4 +1,5 @@
 clear
+close all
 
 %% Load Data
 
@@ -25,8 +26,10 @@ disc.N = 100;    %number of chunks in discretization
 %% Run Model
 [v,P,x] = sqp_run_new(course, biker, disc);
 convert_v;
-time_values=Tf(end);
+time_values = Tf(end);
+all_params = {biker, course, disc};
 
 %% Plotting
+plotting;
 
 %% Model Comparison

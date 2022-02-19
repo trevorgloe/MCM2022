@@ -9,7 +9,7 @@ Cr = biker.Cr;
 CP = biker.CP;
 Wcap = biker.Wcap;
 tau_w = biker.tau_w;
-A = biker.A;
+CdA = biker.CdA;
 Pm = biker.Pm;
 
 L = course.L;
@@ -24,7 +24,7 @@ x = linspace(0,L,N);
 phi_dis = interp1(linspace(0,L,length(phi)),phi,x);
 g = 9.8; % m/s
 
-c1 = 0.5*rho*A;% air drag coefficient *** get equation
+c1 = 0.5*rho*CdA;% air drag coefficient *** get equation
 c2 = m.*g.*(sind(phi_dis) + Cr);
 c3 = m; % get eq ***
 

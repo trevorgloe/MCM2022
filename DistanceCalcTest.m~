@@ -44,19 +44,11 @@ end
 iterations = round((length(latlon)-1)/5);
 dist4 = zeros(1,iterations);
 inclination2 = zeros(1,iterations);
-
-distcount2 = 0;
-totaldist2 = zeros(1,iterations);
-
 for i=1:iterations-2
-    dist4(i) = dist2(i*5)+dist2(i*5+1)+dist2(i*5+2)+dist2(i*5+3)+dist2(i*5+4);
+    dist4(i) = dist2(i*5)+dist2(i*5+1)+dist2(i*5+2)+dist2(i*5+3)+dist2(i*5+4)
     inclination2(i) = atand((latlon((i+1)*5,3)-latlon(i*5,3))/(dist4(i)*kmtft));
-    
-    distcount2 = distcount2+dist4(i);
-    totaldist2(i) = distcount2;
 end
 
-inclination2 = inclination2*3;
 
 totaldist(end) = totaldist(end-1);
 
@@ -69,16 +61,6 @@ disp("Max change in distance [ft]: ");
 disp(max(dist2)*kmtft);
 disp("Min change in distance [ft]: ");
 disp(min(dist2)*kmtft);
-
-disp("Max inclination1 [deg]: ");
-disp(max(inclination));
-disp("Min inclination1 [deg]: ");
-disp(min(inclination));
-
-disp("Max inclination2 [deg]: ");
-disp(max(inclination2));
-disp("Min inclination2 [deg]: ");
-disp(min(inclination2));
 
 inclination(end) = inclination(end-1);
 
@@ -106,10 +88,7 @@ figure()
 plot(totaldist,inclination);
 
 figure()
-plot(totaldist2,inclination2*1.5);
-
-figure()
-scatter(latlon(:,1),latlon(:,2),10,inclination*4);
+scatter(latlon(:,1),latlon(:,2),10,inclination);
 colorbar;
 
 figure()

@@ -5,6 +5,7 @@ g = 9.81;   % acceleration due to gravity [m/s^2]
 
 %% Define biker parameters
 m = 66.25;      % rider mass [kg]
+% m = 66.25;
 Cr = 0.005;   % wheel resistance coefficient
 A = 0.194*0.1;   % frontal area [m^2]   (drag coefficient of 0.1 is also in there)
 % CP = 142.8;   % rider critical power [Watts]
@@ -13,11 +14,11 @@ Wcap = 24235;   % rider anaerobic work capacity [J]
 tau_w = 500;   % W' recovery time constant
 Pm = 350; % max power [Watts]
 
-biker.m = m;
+% biker.m = m;
 biker.Cr = Cr;
 biker.A = A;
 biker.CP = CP;
-% biker.Wcap = Wcap;
+biker.Wcap = Wcap;
 biker.tau_w = tau_w;
 biker.Pm = Pm;
 
@@ -39,9 +40,8 @@ disc.N = 100;    %number of chunks in discretization
 N = disc.N;
 
 % mvec = linspace(50,70,4);
-Wcapvec = linspace(5000,25000,10);
-% tau_wvec = linspace(400,600,10);
-for i=1:length(Wcapvec)
+Wcapvec = linspace(24200,243);
+for i=1:length(mvec)
     % run the model 3 times with random initial conditions and take the
     % best run
     biker.Wcap = Wcapvec(i);

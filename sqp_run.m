@@ -25,7 +25,7 @@ function [v,x] = sqp_run(course, biker, disc)
     g = 9.8; % m/s
     
     c1 = 0.5*rho*A;% air drag coefficient *** get equation
-    c2 = m.*g.*(phi_dis + Cr);
+    c2 = m.*g.*(sind(phi_dis) + Cr);
     c3 = m; % get eq ***
     
     %% F function

@@ -68,6 +68,8 @@ function [v,P,x] = sqp_run_new(course, biker, disc)
         Wptot = Wcap;
         Wptot = Wcap - sum((1-delta_v+delta_v.*exp(-shifted_x./(v*tau_w))).*(P-CP)*dx);
 
+        ceq = [Wptot P-Pcalc];
+        
         if isnan(ceq)
             disp('AHHHHH')
             disp(ceq)

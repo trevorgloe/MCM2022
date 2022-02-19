@@ -16,7 +16,7 @@ tau_w = 500;   % W' recovery time constant
 
 % biker.m = m;
 biker.Cr = Cr;
-biker.A = A;
+biker.CdA = A;
 biker.CP = CP;
 biker.Wcap = Wcap;
 biker.tau_w = tau_w;

@@ -1,6 +1,6 @@
 % analyze results of sensitivity study
 
-m = 9;      % number of data points for the parameter
+m = 10;      % number of data points for the parameter
 % first parse all data collected
 all_P = zeros(m,N);
 all_v = zeros(m,N);
@@ -8,8 +8,8 @@ all_m = zeros(1,m)
 
 cd model_data
 
-Folders = dir(fullfile('Wcap_sensitivity','*.*'));
-cd Wcap_sensitivity
+Folders = dir(fullfile('tau_w_sensitivity','*.*'));
+cd tau_w_sensitivity
 
 for s = 1:m
     Files = dir(fullfile(Folders(s+2).name,'*.mat'))
@@ -23,7 +23,7 @@ for s = 1:m
     all_P(s,:)=P;
     all_v(s,:)=v;
     biker = all_params{1};
-    all_m(s)=biker.Wcap;
+    all_m(s)=biker.tau_w;
     
     cd ..
     
@@ -46,7 +46,7 @@ for s = 1:m
 end
 labs = arrayfun(@num2str, all_m, 'UniformOutput',0);
 [hleg, att] = legend(labs);
-title(hleg, "W'_{capacity} values")
+title(hleg, "\tau_{w} values")
 hleg.Title.Visible = 'on';
 hleg.Title.NodeChildren.Position = [0.5 1.1 0];
 xlabel('x [m]')

@@ -11,6 +11,7 @@ latlon = table2array(T); % NOTE: column 3 in latlon is the elevation in ft
 
 dist = zeros(1,length(latlon)-1); % distance between two latlon points
 totaldist = zeros(1,length(latlon)); % total distance up to that point in the track
+
 inclination = zeros(1,length(latlon));
 
 kmtft = 3280.84; % km to ft conversion
@@ -32,10 +33,45 @@ subplot(2,1,2)
 plot(totaldist,latlon(:,3));
 
 %% Calculate the radius of curvature
+tangent = zeros(1,length(latlon));
+tangentvec = zeros(2,length(latlon))';
+radius = zeros(1,length(tangent))';
+
 for i=1:length(latlon)-1
-    tangent = (latlon(i
+    tangent(i) = (latlon(i+1,2)-latlon(i,2))/(latlon(i+1,1)-latlon(i,1));
+    tangentvec(i,1) = latlon(i+1,1)-latlon(i,1);
+    tangentvec(i,2) = latlon(i+1,2)-latlon(i,2);
+    
+    radius(i) = abs(1/(norm(tangentvec(i+1,:))-norm(tangentvec(i,:))));
 end
-tangent = (latlon(
+radius(end) = radius(end-1);
+
+radius_nonzero = nonzeros(radius);
+disp("Minimum Radius");
+disp(min(abs(radius_nonzero)));
+
+tangent(end) = tangent(end-1);
+radius(end) = radius(end-1);
+tangentvec(end,1) = tangentvec(end-1,1); 
+tangentvec(end,2) = tangentvec(end-1,2);
+
+% tangent
+tangentvec = tangentvec.*kmtft;
+
+
+
+% radius = zeros(1,length(tangent));
+% radius = 1/tangent;
+
+figure()
+subplot(3,1,1)
+plot(totaldist,inclination*4); % times 4 term is because shits wack bro
+subplot(3,1,2)
+plot(totaldist,radius); % times 4 term is because shits wack bro
+subplot(3,1,3)
+plot(totaldist,latlon(:,3));
+sgtitle("Radius of curvature");
+
 
 %% Calculation of smoother inclination for accuracy and nice graphs
 
@@ -88,19 +124,38 @@ inclination_5sample = inclination(:,1:5:end);
 totaldist_5sample = totaldist(:,1:5:end);
 % smooth_totaldist_5sample = smooth_totaldist(:,1:5:end);
 
+tangent_5sample = zeros(1,length(latlon_5sample));
+radius_5sample = zeros(1,length(tangent_5sample));
+
+for i=1:length(latlon_5sample)-1
+    tangent_5sample(i) = (latlon_5sample(i+1,2)-latlon_5sample(i,2))/(latlon_5sample(i+1,1)-latlon_5sample(i,1));
+    radius_5sample(i) = 1/tangent_5sample(i);
+end
+tangent_5sample(end) = tangent_5sample(end-1);
+radius_5sample(end) = radius_5sample(end-1);
+
+disp("Index of max radius");
+[~, ind] = max(radius_5sample);
+disp(ind);
+
+totaldistmi_5sample = totaldist_5sample*(kmtft/5280); % total distance up to that point in the track
+
 figure()
 scatter(latlon_5sample(:,1),latlon_5sample(:,2),10,inclination_5sample*4);
 colorbar;
 title("Sampled Data: ");
 
 figure()
-subplot(2,1,1)
+subplot(3,1,1)
 plot(totaldist_5sample,inclination_5sample*4); % times 4 term is because shits wack bro
 % subplot(3,1,2)
 % plot(smooth_totaldist_5sample,smooth_inclination*4); % times 4 term is because shits wack bro
-subplot(2,1,2)
+subplot(3,1,2)
+plot(totaldist_5sample,radius_5sample); % times 4 term is because shits wack bro
+subplot(3,1,3)
 plot(totaldist_5sample,latlon_5sample(:,3));
 sgtitle("Sampled Data");
+
 
 %% Interpolation of the smooth inclination [DOESN'T WORK]
 

@@ -33,24 +33,41 @@ subplot(2,1,2)
 plot(totaldist,latlon(:,3));
 
 %% Calculate the radius of curvature
-tangent = zeros(1,length(latlon));
-radius = zeros(1,length(tangent));
+tangentvec = zeros(2,length(latlon))';
+radius = zeros(1,length(tangent))';
 
 for i=1:length(latlon)-1
-    tangent(i) = (latlon(i+1,2)-latlon(i,2))/(latlon(i+1,1)-latlon(i,1));
-    radius(i) = 1/tangent(i);
+    tangentvec(i,1) = latlon(i+1,1)-latlon(i,1);
+    tangentvec(i,2) = latlon(i+1,2)-latlon(i,2);
+    
+    radius(i) = abs(1/(norm(tangentvec(i+1,:))-norm(tangentvec(i,:))));
 end
+radius(end) = radius(end-1);
+disp("Minimum Radius");
+disp(min(abs(radius)));
+
+[~, ind] = min(abs(radius));
+disp("Index of Minimum Radius");
+disp(ind);
+
+totaldistmi = totaldist*(kmtft/5280);
+
+% radius_nonzero = nonzeros(radius);
+% disp("Minimum Radius");
+% disp(min(abs(radius_nonzero)));
+
 tangent(end) = tangent(end-1);
 radius(end) = radius(end-1);
+tangentvec(end,1) = tangentvec(end-1,1); 
+tangentvec(end,2) = tangentvec(end-1,2);
 
-% radius = zeros(1,length(tangent));
-% radius = 1/tangent;
+tangentvec = tangentvec.*kmtft; % convert to ft
 
 figure()
 subplot(3,1,1)
 plot(totaldist,inclination*4); % times 4 term is because shits wack bro
 subplot(3,1,2)
-plot(totaldist,radius); % times 4 term is because shits wack bro
+plot(totaldist,radius);
 subplot(3,1,3)
 plot(totaldist,latlon(:,3));
 sgtitle("Radius of curvature");

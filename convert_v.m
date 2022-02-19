@@ -33,8 +33,26 @@ for ii = 2:N
     dvdt(ii) = (v(ii) - v(ii-1))/(dx*v(ii));
 end
 % ineq constraint 1
-P = (c1.*v + c2 + c3.*dvdt).*v; 
+Pcalc = (c1.*v.^2 + c2 + c3.*dvdt).*v; 
 
+P_diff = Pcalc - P;
+
+
+        
+delta_v = delta(P,CP);
+        
+% check to see how much W' was actually used
+x2 = repmat(x(1:30),1,ceil(length(x)/30));
+shifted_x = x2(1:N);
+        
+Wptot = Wcap;
+%         Wexp = 0;
+Wptot = Wcap - sum((1-delta_v+delta_v.*exp(-shifted_x./(v*tau_w))).*(P-CP)*dx);
 
 % total time
 Tf = cumtrapz(x,1./v);
+disp(['Total time: ' num2str(Tf(end)/60)])
+
+function d = delta(P,CP)
+    d = P < CP;
+end

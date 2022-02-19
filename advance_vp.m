@@ -8,7 +8,7 @@ dx = v;
 
 delta = interp1(params.psi_xvals,params.psi,x);
 P = interp1(params.P_xvals,params.Papplied,x);
-dv = Ptot(P,params,v,delta,delta);
+dv = Ptot(P,params,v,delta,delta)/(params.m*v);
 
 ds = [dv dx]';
 

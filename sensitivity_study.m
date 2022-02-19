@@ -1,4 +1,4 @@
-%% Define parameters and discretize
+%% Define parameters and discretize for sensitivity study
 
 %% Define randome parameters
 g = 9.81;   % acceleration due to gravity [m/s^2]

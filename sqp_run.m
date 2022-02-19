@@ -40,19 +40,28 @@ function [v,x] = sqp_run(course, biker, disc)
             dvdt(ii) = (v(ii) - v(ii-1))/(dx*v(ii));
         end
         % ineq constraint 1
-        P = (c1.*v + c2 + c3.*dvdt).*v; 
+%         P = (c1.*v + c2 + c3.*dvdt).*v; 
+        P = (c1.*v + c2 + c3).*v; 
         % P <= Pm;
+        c = P - Pm*ones(1,N);
         c = P - Pm*ones(1,N);
 %         disp(max(P))
         if c > 0
             disp('c not satisfied')
         end
         % define delta 
-        function d = delta(P,CP)
+%         function d = delta(P,CP)
+%             if P < CP
+%                 d = 1;
+%             else
+%                 d = 0;
+%             end
+%         end
+        for ii = 1:N
             if P < CP
-                d = 1;
+                delta1(ii) = 1
             else
-                d = 0;
+                delta1(ii) = 0;
             end
         end
         
@@ -62,8 +71,7 @@ function [v,x] = sqp_run(course, biker, disc)
             else
                 x_flag(kk) = 0;
             end
-        end
-        
+        end  
         top_x = x;
         for kk = 2:length(P)
             if x_flag(kk) == 0
@@ -88,28 +96,29 @@ function [v,x] = sqp_run(course, biker, disc)
 %         end
         Wexp = 0;
         for jj = 1:N
-            Wexp = Wexp + (1-delta(P(jj),CP))*(P(jj)-CP)*dx/v(jj);
+%             Wexp = Wexp + (1-delta(P(jj),CP))*(P(jj)-CP)*dx/v(jj);
+            Wexp = Wexp + (delta1*P(jj)-CP)*dx/v(jj);
         end
 %         ceq = Wcap - sum(innersum.*exp(-delta(P,CP*ones(1,N)).*(top_x./(v.*tau_w))).*(dx./v)); 
 %         disp(Wexp)
-%         ceq = Wcap - Wexp;
+        ceq = Wcap - Wexp;
 %         disp(ceq)
-        ceq = [];
+%         ceq = [];
 %         if isnan(c)
 %             disp('AHHHHH')
 %             disp(c)
 
 %         disp(sum(c<ones(1,N)*Pm))
-        if isnan(ceq)
-            disp('AHHHHH')
-            disp(ceq)
-%             disp(v)
-        end
+%         if isnan(ceq)
+%             disp('AHHHHH')
+%             disp(ceq)
+% %             disp(v)
+%         end
     end
     
     %% fmincon arguments
-    A = eye(N);
-    b = ones(1,N)*30;
+    A = [];%eye(N);
+    b = []; %ones(1,N)*30;
     Aeq = [];
     beq = [];
     lb = zeros(1,N);
@@ -119,7 +128,7 @@ function [v,x] = sqp_run(course, biker, disc)
 %     nonlcon =@ constraint; %,x,Pm,N,Wcap,CP,c1,c2,c3,tau_w);
     
     %% Call fmincon
-    options = optimoptions('fmincon','Algorithm','sqp','Display','iter','MaxFunctionEvaluations',1e8);
+    options = optimoptions('fmincon','Algorithm','sqp','Display','iter','MaxFunctionEvaluations',1e6);
     v = fmincon(fun,v0,A,b,Aeq,beq,lb,ub,@constraint,options);
     disp('test')
     

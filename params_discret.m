@@ -23,13 +23,20 @@ biker.Pm = Pm;
 %% Define course parameters
 L = 44.2e3;    %total course length [m]
 % phi = [1 2 3 4 6 7 8 7 6 5 4 3 2 1];   %angle of the slope of the course over the length of the course
-phi = [0 0 0 0 0 0 0];
+% phi = [0 0 0 0 0 0 0];
+phi = [0 0 -1 -2 -3 -5 -8 -9 -7 -4 -3 -2 1 3 7 9];
+% phi = totaldist.m;
 rho = 1.1455; % density at location [kg/m^3]
+
+% course.data = 'TokyoWomens_indivTT.mat';
+% get_phi
 
 %structure to store course parameters
 course.L = L;
 course.phi = phi;
 course.rho = rho;
+
+
 
 %% Discretize course into lil chunky bits
 

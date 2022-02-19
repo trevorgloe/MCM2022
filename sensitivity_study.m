@@ -41,11 +41,12 @@ N = disc.N;
 % mvec = linspace(50,70,4);
 % Wcapvec = linspace(5000,25000,10);
 % tau_wvec = linspace(400,600,10);
-Pmvec = linspace(300,380,10);
+% Pmvec = linspace(300,380,10);
+Cdvec = linspace(0.05, 0.5, 10);
 for i=1:length(Wcapvec)
     % run the model 3 times with random initial conditions and take the
     % best run
-    biker.Pm = Pmvec(i);
+    biker.Cd = Cdvec(i);
     time_values = zeros(1,3);
     Ptot = zeros(3,N);
     vtot = zeros(3,N);

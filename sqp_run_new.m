@@ -29,7 +29,7 @@ function [v,P,x] = sqp_run_new(course, biker, disc)
     phi_dis = interp1(linspace(0,L,length(phi)),phi,x);
     g = 9.8; % m/s
     
-    c1 = 0.5*rho*A;% air drag coefficient *** get equation
+    c1 = 0.5*biker.Cd*rho;% air drag coefficient *** get equation
     c2 = m.*g.*(sind(phi_dis) + Cr);
     
     % assume wheel is flat disk with mass mw and radius rw

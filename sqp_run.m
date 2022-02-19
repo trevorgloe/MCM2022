@@ -19,13 +19,13 @@ function [v,x] = sqp_run(course, biker, disc)
     N = disc.N;
     
     dx = L/N;
-    v0 = ones(1,N);
+    v0 = 0.001*ones(1,N);
     x = linspace(0,L,N);
     phi_dis = interp1(linspace(0,L,length(phi)),phi,x);
     g = 9.8; % m/s
     
     c1 = 0.5*rho*A;% air drag coefficient *** get equation
-    c2 = m.*g.*(phi_dis + Cr);
+    c2 = m.*g.*(sind(phi_dis) + Cr);
     c3 = m; % get eq ***
     
     %% F function
@@ -38,7 +38,6 @@ function [v,x] = sqp_run(course, biker, disc)
         for ii = 2:N
             dvdt(ii) = (v(ii) - v(ii-1))/(dx*v(ii));
         end
-        
         % ineq constraint 1
         P = (c1.*v + c2 + c3.*dvdt).*v; 
         % P <= Pm;
@@ -53,20 +52,47 @@ function [v,x] = sqp_run(course, biker, disc)
             end
         end
         
+        for kk = 1:length(P)
+            if P(kk) > CP
+                x_flag(kk) = 1;
+            else
+                x_flag(kk) = 0;
+            end
+        end
+        
+        top_x = x;
+        for kk = 2:length(P)
+            if x_flag(kk) == 0
+                ii = kk;
+                poop = x_flag(ii);
+                while poop == 0 && ii > 0
+                    poop = x_flag(ii);
+                	ind = (ii);
+                    ii = ii-1;
+                end
+                if ii == 0
+                    top_x(kk) = 0;
+                else
+                    top_x(kk) = x(ind);
+                end
+            end  
+        end        
+        
         % eq constraint 2 
         for jj = 1:N
             innersum(jj) = sum( (1-delta(P(jj),CP)) * (P(jj)-CP) * (dx/v(jj)) );
         end
-         ceq = Wcap - sum(innersum.*exp(-delta(P,CP*ones(1,N)).*(x./(v.*tau_w))).*(dx./v)); 
+         ceq = Wcap - sum(innersum.*exp(-delta(P,CP*ones(1,N)).*(top_x./(v.*tau_w))).*(dx./v)); 
     end
     
     %% fmincon arguments
     A = eye(N);
-    b = ones(1,N)*1000;
+    b = ones(1,N)*30;
     Aeq = [];
     beq = [];
     lb = zeros(1,N);
-    ub = [];
+    ub = [];%ones(1,N)*30;
+%     ub(1) = 0.001;
     
     nonlcon =@ constraint; %,x,Pm,N,Wcap,CP,c1,c2,c3,tau_w);
     

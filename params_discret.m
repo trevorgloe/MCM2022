@@ -10,9 +10,11 @@ Cr = 0.005;   % wheel resistance coefficient
 A = 0.194*0.1;   % frontal area [m^2]   (drag coefficient of 0.1 is also in there)
 % CP = 142.8;   % rider critical power [Watts]
 CP = 180;
-Wcap = 24235;   % rider anaerobic work capacity [J]
+% Wcap = 24235;   % rider anaerobic work capacity [J]
+Wcap = 100000;
 tau_w = 500;   % W' recovery time constant
-Pm = 350; % max power [Watts]
+% Pm = 350; % max power [Watts]
+Pm = 220;
 
 biker.m = m;
 biker.Cr = Cr;

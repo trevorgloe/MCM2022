@@ -8,8 +8,8 @@ all_m = zeros(1,m)
 
 cd model_data
 
-Folders = dir(fullfile('CP_sensitivity','*.*'));
-cd CP_sensitivity
+Folders = dir(fullfile('Wcap_sensitivity','*.*'));
+cd Wcap_sensitivity
 
 for s = 1:m
     Files = dir(fullfile(Folders(s+2).name,'*.mat'))
@@ -23,24 +23,31 @@ for s = 1:m
     all_P(s,:)=P;
     all_v(s,:)=v;
     biker = all_params{1};
-    all_m(s)=biker.m;
+    all_m(s)=biker.Wcap;
     
     cd ..
     
 end
 
+x = linspace(0,L,N);
+
 figure
 hold on
 for s = 1:m
-    plot(all_v(s,:))
+    plot(x,all_v(s,:))
 end
-xlabel('x')
+xlabel('x [m]')
 ylabel('V [m/s]')
 
 figure
 hold on
 for s = 1:m
-    plot(all_P(s,:))
+    plot(x,all_P(s,:),'Linewidth',2)
 end
-xlabel('x')
-ylabel('P [Watts')
+labs = arrayfun(@num2str, all_m, 'UniformOutput',0);
+[hleg, att] = legend(labs);
+title(hleg, "W'_{capacity} values")
+hleg.Title.Visible = 'on';
+hleg.Title.NodeChildren.Position = [0.5 1.1 0];
+xlabel('x [m]')
+ylabel('P [Watts]')

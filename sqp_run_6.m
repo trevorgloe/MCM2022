@@ -53,7 +53,7 @@ function [v,P,x] = sqp_run_new(course, biker, disc)
             end
          end
          % uncomment below if want no consideration of track curvature
-         % Cr = Cr0*ones(1,N);
+         Cr = Cr0*ones(1,N);
         c2 = m.*g.*(sind(phi_dis) + Cr);
     
         % Backward difference approx for dvdt
@@ -112,7 +112,7 @@ function [v,P,x] = sqp_run_new(course, biker, disc)
     ub(1) = 0.1;
    
     %% Call fmincon
-    options = optimoptions('fmincon','Algorithm','sqp','MaxFunctionEvaluations',1e8,'StepTolerance',1e-10,'MaxIterations',10e3);
+    options = optimoptions('fmincon','Algorithm','sqp','MaxFunctionEvaluations',1e8,'StepTolerance',1e-10,'MaxIterations',10e3,'Display','iter');
     % to display iterations :'Display','iter'
     s = fmincon(fun,s0,A,b,Aeq,beq,lb,ub,@constraint,options);
     v = s(1:N);

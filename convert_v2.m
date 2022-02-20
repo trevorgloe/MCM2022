@@ -5,6 +5,7 @@
 
 m = biker.m;
 
+Cr = zeros(1,N);
 for ii = 1:disc.N
     if course.r_c(ii) == inf %|| course.curvature_flag == 0
         Cr(ii) = biker.Cr0;
@@ -36,6 +37,7 @@ c1 = 0.5*rho*CdA;% area air drag coefficient
 c2 = m.*g.*(sind(phi_dis) + Cr);
 c3 = m; % get eq ***
 
+dvdt = zeros(1,N);
 dvdt(1) =  (v(1))/(dx*v(1));
 for ii = 2:N
     dvdt(ii) = (v(ii) - v(ii-1))/(dx*v(ii));
@@ -52,7 +54,7 @@ shifted_x = x2(1:N);
         
 Wptot = Wcap;
 %         Wexp = 0;
-Wptot = Wcap - sum((1-delta_v+delta_v.*exp(-shifted_x./(v*tau_w))).*(P-CP)*dx);
+Wptot = Wcap - sum((1-delta_v+delta_v.*exp(-shifted_x./(v*tau_w))).*(P-CP)*dx)
 
 % total time
 Tf = cumtrapz(x,1./v);

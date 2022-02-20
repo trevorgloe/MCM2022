@@ -1,55 +1,56 @@
 % run a single time
-%% Define randome parameters
+%% Flags ferda
+% course.curvature_flag = 1;
+
+%% Load Data
+distcalcs_verif
+
+%% Set Params
 g = 9.81;   % acceleration due to gravity [m/s^2]
 
-%% Define biker parameters
-% m = 66.25;      % rider mass [kg]
-m = 66.25;
-Cr = 0.005;   % wheel resistance coefficient
-% biker.CdA = 0.194*0.1;   % drag coeff of area [m^2]   (drag coefficient of 0.1 is also in there)
-% CP = 142.8;   % rider critical power [Watts]
-CP = 180;
-Wcap = 24235;   % rider anaerobic work capacity [J]
-tau_w = 500;   % W' recovery time constant
-Pm = 225; % max power [Watts]
+% Define biker parameters
+biker.m = 66.25;      % rider mass [kg]
+biker.Cr0 = 0.002;   % wheel resistance coefficient
+biker.CdA = 0.172;   % drag coeff of area [m^2]   (drag coefficient of 0.1 is also in there)
+biker.CP = 180;   % rider critical power [Watts]
+biker.Wcap = 128e3;   % rider anaerobic work capacity [J]
+biker.tau_w = 500;   % W' recovery time constant
+biker.Pm = 300; % max power [Watts]
 
-biker.m = m;
-biker.Cr = Cr;
-% biker.CdA = A;
-biker.CP = CP;
-biker.Wcap = Wcap;
-biker.tau_w = tau_w;
-biker.Pm = Pm;
-biker.CdA = 0.194*0.1;   % drag coeff of area [m^2]   (drag coefficient of 0.1 is also in there)
+% Define course parameters
+course.L = 48.7e3;    %total course length [m]
 
-%% Define course parameters
-L = 13e3;    %total course length [m]
-% phi = [1 2 3 4 6 7 8 7 6 5 4 3 2 1];   %angle of the slope of the course over the length of the course
-% phi = [2 7 6 6 6 6 5 6 8 8 7 8 7.9];
-% phi = [0 1 0];
-phinans = inclination_5sample;
+phinans = 4*inclination_5sample;
 phinans(find(isnan(phinans)))=0;
 phi = phinans;
-rho = 1.1455; % density at location [kg/m^3]
 
-headwind = 0;   % [m/s]
+% slap a low pass filter on phi
+phi = lowpass(phi,0.05);
 
-%structure to store course parameters
-course.L = L;
-course.phi = phi;
-course.rho = rho;
+course.rho = 1.1455; % density at location [kg/m^3]
+for ii = 1:length(R)
+    if mod(ii,10) == 0
+        r_c(ii/10) = R(ii);% curvature
+        course.beta(ii/10) = beta(ii);
+    end
+end
+course.r_c = r_c;
+course.headwind = 0;
 
-course.headwind = headwind;
+% make all r_c values 1 (cause im ignoring them)
+course.r_c = ones(1,100);
+course.beta = zeros(1,100);
 
-%% Discretize course into lil chunky bits
+figure
+plot(phi)
+% Discretize course into lil chunky bits
+disc.N = length(course.r_c);    %number of chunks in discretization
 
-disc.N = 200;    %number of chunks in discretization
-N = disc.N;
+%% Run Model
+[v,P,x] = sqp_run_6(course, biker, disc);
+convert_v2;
+time_values = Tf(end);
+all_params = {biker, course, disc};
+plotting
+save_data_params(all_params,v,P);
 
-beta = linspace(1,2*pi,N);      % angle of current velocity and headwind
-course.beta = beta;
-
-% sqp_solve;
-[v,P,x] = sqp_run_new_wind(course, biker, disc);
-convert_v;
-plotting;

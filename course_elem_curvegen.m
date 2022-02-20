@@ -13,15 +13,15 @@ biker.m = 66.25;      % rider mass [kg]
 biker.Cr0 = 0.002;   % wheel resistance coefficient
 biker.CdA = 0.172;   % drag coeff of area [m^2]   (drag coefficient of 0.1 is also in there)
 biker.CP = 180;   % rider critical power [Watts]
-biker.Wcap = 128e3;   % rider anaerobic work capacity [J]
+biker.Wcap = -128e3;   % rider anaerobic work capacity [J]
 biker.tau_w = 500;   % W' recovery time constant
 biker.Pm = 300; % max power [Watts]
 
 % Discretize course into lil chunky bits
-disc.N = 100;    %number of chunks in discretization
+disc.N = 150;    %number of chunks in discretization
 
 %% Run Model
-for qq = 1:5
+for qq = 3:4
     disp(qq)
     c(qq).beta = 0;
     [v,P,x] = course_elem_sqp_run_6(c(qq), biker, disc, qq);

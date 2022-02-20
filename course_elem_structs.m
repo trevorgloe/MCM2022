@@ -21,9 +21,9 @@ c2.headwind = 0;
 %% c3
 % geom
 c3.L = 5e3;    %total course length [m]
-c3.phi = 1./(1+linspace(-45,45,20).^2);
+c3.phi = [-45 -45];
 %-secd(linspace(-45,45,20)).^2;
-%[-45 -45];%   %angle of the slope of the course over the length of the course
+%1./(1+linspace(-45,45,20).^2);%   %angle of the slope of the course over the length of the course
 % env
 c3.rho = 1.1455; % density at location [kg/m^3]
 c3.r_c = 1; %*** needs fixed to run without

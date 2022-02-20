@@ -170,7 +170,8 @@ hold on
 plot(xq,vq,'.')
 legend('Sample Points','Interpolated Values')
 
-
+disp("Mean inclination: ");
+disp(mean(vq));
 % inter_dist = zeros(1,length(latlon)-1); % distance between two latlon points
 % inter_totaldist = zeros(1,length(latlon)); % total distance up to that point in the track
 % inter_inclination = zeros(1,length(latlon));

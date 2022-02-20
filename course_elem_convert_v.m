@@ -53,8 +53,7 @@ shifted_x = x2(1:N);
         
 Wptot = Wcap;
 %         Wexp = 0;
-Wptot = Wcap - sum((1-delta_v+delta_v.*exp(-shifted_x./(v*tau_w))).*(P-CP)*dx);
-
+Wptot = Wcap - sum((1-delta_v+delta_v.*exp(-shifted_x./(v*tau_w))).*(P-CP)*dx)'
 % total time
 Tf = cumtrapz(x,1./v);
 disp(['Total time: ' num2str(Tf(end)/60)])

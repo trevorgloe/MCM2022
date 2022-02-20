@@ -104,6 +104,7 @@ function [v,P,x] = sqp_run_new(course, biker, disc, qq)
             disp('AHHHHH')
             disp(ceq)
         end
+        return
     end
     
     %% fmincon arguments
@@ -128,7 +129,7 @@ function [v,P,x] = sqp_run_new(course, biker, disc, qq)
     ub(1) = 0.1;
    
     %% Call fmincon
-    options = optimoptions('fmincon','Algorithm','sqp','MaxFunctionEvaluations',1e8,'StepTolerance',1e-8,'MaxIterations',10e3,'Display','iter');
+    options = optimoptions('fmincon','Algorithm','sqp','MaxFunctionEvaluations',1e8,'StepTolerance',1e-8,'MaxIterations',1e2,'Display','iter');
     % to display iterations :'Display','iter'
     s = fmincon(fun,s0,A,b,Aeq,beq,lb,ub,@constraint,options);
     v = s(1:N);

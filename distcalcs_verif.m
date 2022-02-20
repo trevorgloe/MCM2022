@@ -1,6 +1,6 @@
 %% Get distance data
 
-T = readtable('./data/tokyo_track_points.csv');
+T = readtable('tokyo_track_points.csv');
 latlon = table2array(T); % NOTE: column 3 in latlon is the elevation in ft
 alt = 0.3048*table2array(T(:,3)); %[m]
 lat = table2array(T(:,1));

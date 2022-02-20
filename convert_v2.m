@@ -3,6 +3,8 @@
 % must have velocity vector v defined
 % version 2: includes implementation of curvature consideration
 
+N = disc.N;
+
 m = biker.m;
 
 Cr = zeros(1,N);
@@ -24,8 +26,6 @@ Pm = biker.Pm;
 L = course.L;
 phi = course.phi;
 rho = course.rho;
-
-N = disc.N;
 
 dx = L/N;
 v0 = ones(1,N);

@@ -38,10 +38,23 @@ function [v,P,x] = sqp_run_new(course, biker, disc, qq)
     
     %% F function
     fun = @(s) dx.*sum(1./s(1:N));
-    
+%     function F = fun(s)
+%         for mm = 1:length(s)/2
+%             if s(mm) == 0
+%                 s(mm) = 0.001;
+%             end
+%         end
+%         F = dx.*sum(1./s(1:N));
+%     end
+%     
     %% Constraint funct
     function [c,ceq] = constraint(s)%,x,Pm,N,Wcap,CP,c1,c2,c3,tau_w)
         v = s(1:N);
+%         for ll = 1:N
+%             if isnan(v(ll))
+%                 v(ll) = 25;
+%             end
+%         end
         % disp('runnin')
         % Add curvature consideration
 %          for ii = 1:N
@@ -52,7 +65,7 @@ function [v,P,x] = sqp_run_new(course, biker, disc, qq)
 %             end
 %          end
          % uncomment below if want no consideration of track curvature
-         Cr = Cr0*ones(1,N);
+        Cr = Cr0*ones(1,N);
         c2 = m.*g.*(sind(phi_dis) + Cr);
     
         % Backward difference approx for dvdt
@@ -64,7 +77,7 @@ function [v,P,x] = sqp_run_new(course, biker, disc, qq)
         % ineq constraint 1
         Pcalc = (c1.*(v-adj_headwind).^2 + c2 + c3.*dvdt).*v; 
         P = s(N+1:end);
-        c = []; %*** why tho
+        c = [];
         if c > 0
             disp('c not satisfied')
         end

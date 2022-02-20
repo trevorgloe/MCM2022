@@ -1,4 +1,5 @@
 % run a single time
+clear all
 %% Flags ferda
 % course.curvature_flag = 1;
 
@@ -20,6 +21,8 @@ biker.Pm = 300; % max power [Watts]
 % Define course parameters
 course.L = 48.7e3;    %total course length [m]
 
+DistanceCalcs;
+distcalcs_verif;
 phinans = 4*inclination_5sample;
 phinans(find(isnan(phinans)))=0;
 phi = phinans;
@@ -36,10 +39,11 @@ for ii = 1:length(R)
 end
 course.r_c = r_c;
 course.headwind = 0;
+course.phi = phi;
 
 % make all r_c values 1 (cause im ignoring them)
-course.r_c = ones(1,100);
-course.beta = zeros(1,100);
+course.r_c = ones(1,160);
+course.beta = zeros(1,160);
 
 figure
 plot(phi)

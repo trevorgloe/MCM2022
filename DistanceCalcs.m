@@ -1,6 +1,6 @@
 %% Testing distance calculation
 close all;
-clear;
+% clear;
 clc;
 
 %% basic distance and inclination

@@ -1,7 +1,4 @@
 %% Get distance data
-close all;
-clear;
-clc;
 
 T = readtable('flanders_track_points.csv');
 latlon = table2array(T); % NOTE: column 3 in latlon is the elevation in ft
@@ -42,25 +39,12 @@ hold on
 quiver(xEast,yNorth,k(:,1),k(:,2));
 hold off
 
-v = 17; % m/s?
+v = 10; % m/s?
 Cr0 = 0.002;
 g = 9.81;
 
-Cr = zeros(1,length(R));
-for i=1:length(Cr)
-   Cr(i) = (Cr0*sqrt(v^4+g^2*R(i)^2))/(g*R(i));
-end
+Cr = 
 
-% [~, ind] = isNan(smooth_totaldist);
-
-disp("Mean Cr");
-disp(mean(rmmissing(Cr)));
-
-figure();
-plot(L/1000,Cr*1000)
-title('Cr vs. cumulative curve length')
-xlabel L
-ylabel Cr
 
 %% Functions
 function [L,R,k] = curvature(X)

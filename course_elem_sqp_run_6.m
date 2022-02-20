@@ -112,6 +112,7 @@ function [v,P,x] = sqp_run_new(course, biker, disc, qq)
             disp('AHHHHH')
             disp(ceq)
         end
+        return
     end
     
     %% fmincon arguments

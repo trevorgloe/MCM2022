@@ -1,0 +1,68 @@
+%% Rider Typer Comparisons
+clear all
+close all
+clc
+
+%% Load data
+rider_structs;
+get_courses;
+
+%% Set Params
+g = 9.81;   % acceleration due to gravity [m/s^2]
+
+% Define course parameters
+% course.L = 48.7e3;    %total course length [m]
+% course.phi = phi;%   %angle of the slope of the course over the length of the course
+% course.rho = 1.1455; % density at location [kg/m^3]
+% for ii = 1:length(R)
+%     if mod(ii,10) == 0
+%         r_c(ii/10) = R(ii);% curvature
+%         course.beta(ii/10) = beta(ii);
+%     end
+% end
+% course.r_c = r_c;
+course.headwind = 0;
+course.L = 13e3;    %total course length [m]
+course.phi = [0 1 0];
+course.rho = 1.1455; % density at location [kg/m^3]
+course.beta = 0;
+
+% Discretize course into lil chunky bits
+disc.N = 100;
+%length(course.r_c);    %number of chunks in discretization
+
+%% Run Model
+for ww = 1:4
+    biker = rider_type(ww);
+    biker.Cr0 = 0.002;   % wheel resistance coefficient
+    
+    [v(ww,:),P(ii,:),x(ii,:)] = rider_type_sqp_run_6(course, biker, disc)
+
+    convert_v2;
+    time_values = Tf(end);
+    all_params(:,ww) = {biker, course, disc};
+end
+
+%% Plotting
+
+figure(1)
+hold on
+for qq = 1:4
+    x = linspace(0,all_params{2,qq}.L,all_params{3,qq}.N);
+    plot(x,v,'.-','MarkerSize', 10)
+end
+xlabel('x position')
+ylabel('v')
+grid on
+hold off
+
+figure(2)
+hold on
+for qq = 1:4
+    x = linspace(0,all_params{2,qq}.L,all_params{3,qq}.N);
+    plot(x,P,'r','.-','MarkerSize', 10)
+end
+xlabel('x position')
+ylabel('P')
+grid on
+hold off

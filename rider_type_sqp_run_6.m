@@ -1,4 +1,4 @@
-function [v,P,x] = sqp_run_new(course, biker, disc, qq)
+function [v,P,x] = sqp_run_new(course, biker, disc)
 % Takes in rider and course struct and runs SQP based model
 % v5 Built off of sqp_run_new.m but considers the curvature of the track
 % v6 includes wind stuff
@@ -15,7 +15,7 @@ function [v,P,x] = sqp_run_new(course, biker, disc, qq)
     L = course.L;
     phi = course.phi;
     rho = course.rho;
-    r_c = course.r_c;
+%     r_c = course.r_c;
     adj_headwind = course.headwind*cosd(course.beta);
     
     N = disc.N;
@@ -38,24 +38,12 @@ function [v,P,x] = sqp_run_new(course, biker, disc, qq)
     
     %% F function
     fun = @(s) dx.*sum(1./s(1:N));
-%     function F = fun(s)
-%         for mm = 1:length(s)/2
-%             if s(mm) == 0
-%                 s(mm) = 0.001;
-%             end
-%         end
-%         F = dx.*sum(1./s(1:N));
-%     end
-%     
+    
     %% Constraint funct
     function [c,ceq] = constraint(s)%,x,Pm,N,Wcap,CP,c1,c2,c3,tau_w)
         v = s(1:N);
-%         for ll = 1:N
-%             if isnan(v(ll))
-%                 v(ll) = 25;
-%             end
-%         end
         % disp('runnin')
+        
         % Add curvature consideration
 %          for ii = 1:N
 %             if (r_c(ii) == inf)
@@ -65,7 +53,7 @@ function [v,P,x] = sqp_run_new(course, biker, disc, qq)
 %             end
 %          end
          % uncomment below if want no consideration of track curvature
-        Cr = Cr0*ones(1,N);
+         Cr = Cr0*ones(1,N);
         c2 = m.*g.*(sind(phi_dis) + Cr);
     
         % Backward difference approx for dvdt
@@ -91,12 +79,8 @@ function [v,P,x] = sqp_run_new(course, biker, disc, qq)
         x2 = repmat(x(1:30),1,ceil(length(x)/30));
         shifted_x = x2(1:N);
         
-        if qq == 3 || qq == 4
-            Wptot = Wcap - sum((1-delta_v+delta_v.*exp(-shifted_x./(v*tau_w))).*(P-CP)*dx);
-        else
-            % Wptot = Wcap;
-            Wptot = Wcap - sum((1-delta_v+delta_v.*exp(-shifted_x./(v*tau_w))).*(P-CP)*dx);
-        end
+        Wptot = Wcap;
+        Wptot = Wcap - sum((1-delta_v+delta_v.*exp(-shifted_x./(v*tau_w))).*(P-CP)*dx);
 
         ceq = [Wptot P-Pcalc];
         
@@ -123,12 +107,12 @@ function [v,P,x] = sqp_run_new(course, biker, disc, qq)
     b = [ones(1,N)*10 ones(1,N)*Pm];
     Aeq = [];
     beq = [];
-    lb = [];%zeros(1,2*N);
+    lb = zeros(1,2*N);
     ub = [ones(1,N)*25 ones(1,N)*Pm];
     ub(1) = 0.1;
    
     %% Call fmincon
-    options = optimoptions('fmincon','Algorithm','sqp','MaxFunctionEvaluations',1e8,'StepTolerance',1e-8,'MaxIterations',1e2,'Display','iter');
+    options = optimoptions('fmincon','Algorithm','sqp','MaxFunctionEvaluations',1e8,'StepTolerance',1e-8,'MaxIterations',10e3,'Display','iter');
     % to display iterations :'Display','iter'
     s = fmincon(fun,s0,A,b,Aeq,beq,lb,ub,@constraint,options);
     v = s(1:N);

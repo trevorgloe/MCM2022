@@ -31,7 +31,7 @@ for ii = 1:length(R)
     end
 end
 course.r_c = r_c;
-course.headwind = 10;
+course.headwind = 0;
 
 % Discretize course into lil chunky bits
 disc.N = length(course.r_c);    %number of chunks in discretization

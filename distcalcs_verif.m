@@ -1,6 +1,6 @@
 %% Get distance data
 
-T = readtable('flanders_track_points.csv');
+T = readtable('./data/tokyo_track_points.csv');
 latlon = table2array(T); % NOTE: column 3 in latlon is the elevation in ft
 alt = 0.3048*table2array(T(:,3)); %[m]
 lat = table2array(T(:,1));
@@ -12,15 +12,15 @@ x = cosd(lat).*cosd(long)*R;
 y = cosd(lat).*sind(long)*R;
 
 [L,R,k] = curvature([x y]); %need roation matrix??
+% 
+% for ii = 1:length(x)-1
+%     beta(ii) = atan2d((y(ii+1)-y(ii)),(x(ii+1)/x(ii)));
+%     beta2(ii) = atand((y(ii+1)-y(ii))/(x(ii+1)/x(ii)));
+%     tanbeta(ii) = (y(ii+1)-y(ii))./(x(ii+1)/x(ii));
+% end
+% beta(length(x)) = beta(length(x)-1);
 
-for ii = 1:length(x)-1
-    beta(ii) = atan2d((y(ii+1)-y(ii)),(x(ii+1)/x(ii)));
-    beta2(ii) = atand((y(ii+1)-y(ii))/(x(ii+1)/x(ii)));
-    tanbeta(ii) = (y(ii+1)-y(ii))./(x(ii+1)/x(ii));
-end
-beta(length(x)) = beta(length(x)-1);
-
-% beta = linspace(0,360,length(x));
+beta = linspace(0,360,length(x));
 
 %% Functions
 function [L,R,k] = curvature(X)

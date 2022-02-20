@@ -36,6 +36,8 @@ rho = 1.1455; % density at location [kg/m^3]
 course.L = L;
 course.phi = phi;
 course.rho = rho;
+course.beta = zeros(1,100);
+course.headwind = 0;
 
 %% Discretize course into lil chunky bits
 

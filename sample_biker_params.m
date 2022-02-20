@@ -1,14 +1,14 @@
 %% Sample parameter space of CP, tau_w, Wcap, and Pm
 
-n1 = 1;     %points from CP
-n2 = 1;     %points from Wcap
-n3 = 2;     %points from tau_w
-n4 = 2;     %points from Pm
+n1 = 3;     %points from CP
+n2 = 2;     %points from Wcap
+n3 = 4;     %points from tau_w
+n4 = 5;     %points from Pm
 
 cp_minmax = [140 205];
-Wcap_minmax = [14 30];
-tau_w_minmax = [100 500];
-Pm_minmax = [290 400];
+Wcap_minmax = [14e3 30e3];
+tau_w_minmax = [60 500];
+Pm_minmax = [285 400];
 
 cp_vec = linspace(cp_minmax(1),cp_minmax(2),n1);
 Wcap_vec = linspace(Wcap_minmax(1),Wcap_minmax(2),n2);

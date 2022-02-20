@@ -1,5 +1,9 @@
 clear
 close all
+clc
+
+%% Flags ferda
+% course.curvature_flag = 1;
 
 %% Load Data
 distcalcs_verif
@@ -20,10 +24,15 @@ biker.Pm = 300; % max power [Watts]
 course.L = 48.7e3;    %total course length [m]
 course.phi = [0 1 0];%   %angle of the slope of the course over the length of the course
 course.rho = 1.1455; % density at location [kg/m^3]
-course.r_c = R;% curvature from ma boi callan***
+for ii = 1:length(R)
+    if mod(ii,10) == 0
+        r_c(ii/10) = R(ii);% curvature
+    end
+end
+course.r_c = r_c;
 
 % Discretize course into lil chunky bits
-disc.N = 200;    %number of chunks in discretization
+disc.N = length(course.r_c);    %number of chunks in discretization
 
 %% Run Model
 [v,P,x] = sqp_run_5(course, biker, disc);

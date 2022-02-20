@@ -1,26 +1,43 @@
 %% Get distance data
 
-T = readtable('./data/tokyo_track_points.csv');
+T = readtable('flanders_track_points.csv');
 latlon = table2array(T); % NOTE: column 3 in latlon is the elevation in ft
 alt = 0.3048*table2array(T(:,3)); %[m]
 lat = table2array(T(:,1));
 long = table2array(T(:,2)); %deg
 
 %% Lat long to Cartesian
-R = 6378e3;
-x = cosd(lat).*cosd(long)*R;
-y = cosd(lat).*sind(long)*R;
+[xEast,yNorth] = latlon2local(lat,long,alt,[lat(1),long(1),alt(1)]);
 
-[L,R,k] = curvature([x y]); %need roation matrix??
-% 
-% for ii = 1:length(x)-1
-%     beta(ii) = atan2d((y(ii+1)-y(ii)),(x(ii+1)/x(ii)));
-%     beta2(ii) = atand((y(ii+1)-y(ii))/(x(ii+1)/x(ii)));
-%     tanbeta(ii) = (y(ii+1)-y(ii))./(x(ii+1)/x(ii));
-% end
-% beta(length(x)) = beta(length(x)-1);
+figure;
+scatter(xEast,yNorth,10)
+axis('equal'); % set 1:1 aspect ratio to see real-world shape
 
-beta = linspace(0,360,length(x));
+% R = 6378e3;
+% x = cosd(lat).*cosd(long)*R;
+% y = cosd(lat).*sind(long)*R;
+
+[L,R,k] = curvature([xEast yNorth]);
+format shortG
+disp(L(end)/1000)
+disp(xEast');
+
+figure();
+plot(L,R)
+title('Curvature radius vs. cumulative curve length')
+xlabel L
+ylabel R
+ylim([0,1000]);
+
+figure()
+h = plot(xEast,yNorth); grid on; axis equal
+set(h,'marker','.');
+xlabel x
+ylabel y
+title('2D curve with curvature vectors')
+hold on
+quiver(xEast,yNorth,k(:,1),k(:,2));
+hold off
 
 %% Functions
 function [L,R,k] = curvature(X)

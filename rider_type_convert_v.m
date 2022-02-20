@@ -28,7 +28,7 @@ rho = course.rho;
 dx = L/N;
 v0 = ones(1,N);
 x = linspace(0,L,N);
-phi_dis = interp1(linspace(0,L,length(phi)),phi,x2(ww,:));
+phi_dis = interp1(linspace(0,L,length(phi)),phi,x2);
 g = 9.8; % m/s
 
 c1 = 0.5*rho*CdA;% area air drag coefficient
@@ -38,7 +38,7 @@ c3 = m; % get eq ***
 dvdt = zeros(1,N);
 dvdt(1) =  (v2(ww,1))/(dx*v2(ww,1));
 for ii = 2:N
-    dvdt(ii) = (v2(ww,ii) - v2(ww,ii-1))/(dx*v(ww,ii));
+    dvdt(ii) = (v2(ww,ii) - v2(ww,ii-1))/(dx*v2(ww,ii));
 end
 % ineq constraint 1
 Pcalc = (c1.*v2(ww,:).^2 + c2 + c3.*dvdt).*v2(ww,:); 
@@ -52,12 +52,12 @@ shifted_x = x3(1:N);
         
 Wptot = Wcap;
 %         Wexp = 0;
-Wptot = Wcap - sum((1-delta_v+delta_v.*exp(-shifted_x./(v2(ww,:)*tau_w))).*(P2(ww,:)-CP)*dx)'
+Wptot = Wcap - sum((1-delta_v+delta_v.*exp(-shifted_x./(v2(ww,:)*tau_w))).*(P2(ww,:)-CP)*dx)';
 % total time
 Tf = cumtrapz(x2(ww,:),1./v2(ww,:));
 disp(['Total time: ' num2str(Tf(end)/60)])
 
-function d = delta(P2(ww,:),CP)
+function d = delta(P,CP)
     d = P < CP;
 end
 

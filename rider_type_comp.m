@@ -28,7 +28,7 @@ course.rho = 1.1455; % density at location [kg/m^3]
 course.beta = 0;
 
 % Discretize course into lil chunky bits
-disc.N = 50;
+disc.N = 100;
 %length(course.r_c);    %number of chunks in discretization
 
 %% Run Model
@@ -36,7 +36,7 @@ for ww = 1:4
     biker = rider_type(ww);
     biker.Cr0 = 0.002;   % wheel resistance coefficient
     
-    [v2(ww,:),P2(ww,:),x2(ww,:)] = rider_type_sqp_run_6(course, biker, disc)
+    [v2(ww,:),P2(ww,:),x2(ww,:)] = rider_type_sqp_run_6(course, biker, disc);
     %[v(ww,:),P(ww,:),x(ww,:)]
     rider_type_convert_v;
     time_values = Tf(end);
@@ -48,21 +48,23 @@ end
 figure(1)
 hold on
 for qq = 1:4
-    x = linspace(0,all_params{2,qq}.L,all_params{3,qq}.N);
-    plot(x,v,'.-','MarkerSize', 10)
+%     x = linspace(0,all_params{2,qq}.L,all_params{3,qq}.N);
+    plot(x2(qq,:),v2(qq,:),'.-','MarkerSize', 10)
 end
 xlabel('x position')
 ylabel('v')
 grid on
 hold off
+legend('Time Trial - Male','Time Trial - Female','Climber - Male','Climber - Female')
 
 figure(2)
 hold on
 for qq = 1:4
-    x = linspace(0,all_params{2,qq}.L,all_params{3,qq}.N);
-    plot(x,P,'r','.-','MarkerSize', 10)
+%     x = linspace(0,all_params{2,qq}.L,all_params{3,qq}.N);
+    plot(x2(qq,:),P2(qq,:),'.-','MarkerSize', 10)
 end
 xlabel('x position')
 ylabel('P')
 grid on
 hold off
+legend('Time Trial - Male','Time Trial - Female','Climber - Male','Climber - Female')

@@ -34,6 +34,7 @@ function [v,P,x] = sqp_run_new(course, biker, disc)
     Iw = 1/2*mw*rw^2;
     c3 = m + 2*Iw/rw^2; % effective mass of the rider and bike
     
+
     %% F function
     fun = @(s) dx.*sum(1./s(1:N));
     
@@ -43,15 +44,14 @@ function [v,P,x] = sqp_run_new(course, biker, disc)
         % disp('runnin')
         
         % Add curvature consideration
-         for ii = 1:N
-            if (r_c(ii) == inf)
-                Cr(ii) = Cr0;
-            else
-                Cr(ii) = Cr0*sqrt(v(ii).^4 +g^2.*r_c(ii).^2)./(g.*r_c(ii));
-            end
-         end
-         % uncomment below if want no consideration of track curvature
-         % Cr = Cr0*ones(1,N);
+     for ii = 1:N
+        if (r_c(ii) == inf)
+            Cr(ii) = Cr0;
+        else
+            Cr(ii) = Cr0*sqrt(v(ii).^4 +g^2.*r_c(ii).^2)./(g.*r_c(ii));
+        end
+     end
+    
         c2 = m.*g.*(sind(phi_dis) + Cr);
     
         % Backward difference approx for dvdt

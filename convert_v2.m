@@ -4,7 +4,15 @@
 % version 2: includes implementation of curvature consideration
 
 m = biker.m;
-Cr = biker.Cr0*sqrt(v.^4 +g^2.*course.r_c.^2)./(g.*course.r_c);
+
+for ii = 1:disc.N
+    if course.r_c(ii) == inf %|| course.curvature_flag == 0
+        Cr(ii) = biker.Cr0;
+    else
+        Cr(ii) = biker.Cr0*sqrt(v(ii).^4 +g^2.*r_c(ii).^2)./(g.*r_c(ii));
+    end
+end
+
 %     Cd = biker.Cd;
 CP = biker.CP;
 Wcap = biker.Wcap;

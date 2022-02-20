@@ -1,15 +1,15 @@
 % analyze results of sensitivity study
 
-m = 10;      % number of data points for the parameter
+m = 8;      % number of data points for the parameter
 % first parse all data collected
 all_P = zeros(m,N);
 all_v = zeros(m,N);
-all_m = zeros(1,m)
+all_m = zeros(1,m);
 
 cd model_data
 
-Folders = dir(fullfile('tau_w_sensitivity','*.*'));
-cd tau_w_sensitivity
+Folders = dir(fullfile('tau_w_sensitivity2','*.*'));
+cd tau_w_sensitivity2
 
 for s = 1:m
     Files = dir(fullfile(Folders(s+2).name,'*.mat'))

@@ -1,7 +1,7 @@
 %% Sample parameter space of CP, tau_w, Wcap, and Pm
 
-n1 = 2;     %points from CP
-n2 = 2;     %points from Wcap
+n1 = 1;     %points from CP
+n2 = 1;     %points from Wcap
 n3 = 2;     %points from tau_w
 n4 = 2;     %points from Pm
 
@@ -23,9 +23,9 @@ for i=1:n1
             for n=1:n4
                 ii = sub2ind([n1 n2 n3 n4],i,j,k,n);
                 param_mesh(ii).CP = cp_vec(i);
-                param_mesh(ii).Wcap = Wcap(j);
+                param_mesh(ii).Wcap = Wcap_vec(j);
                 param_mesh(ii).tau_w = tau_w_vec(k);
-                param_mesh(ii).Pm_vec = Pm_vec(n);
+                param_mesh(ii).Pm = Pm_vec(n);
             end
         end
     end

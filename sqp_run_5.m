@@ -42,7 +42,14 @@ function [v,P,x] = sqp_run_new(course, biker, disc)
         v = s(1:N);
         
         % Add curvature consideration
-        Cr = Cr0*sqrt(v.^4 +g^2.*r_c.^2)./(g.*r_c);
+        for ii = 1:N
+            if r_c(ii) == inf
+                Cr(ii) = Cr0;
+            else
+                Cr(ii) = Cr0*sqrt(v(ii).^4 +g^2.*r_c(ii).^2)./(g.*r_c(ii));
+            end
+        end
+        
         c2 = m.*g.*(sind(phi_dis) + Cr);
     
         % Backward difference approx for dvdt

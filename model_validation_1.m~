@@ -23,7 +23,7 @@ course.rho = 1.1455; % density at location [kg/m^3]
 course.r_c = R;% curvature from ma boi callan***
 
 % Discretize course into lil chunky bits
-disc.N = 200;    %number of chunks in discretization
+disc.N = 100;    %number of chunks in discretization
 
 %% Run Model
 [v,P,x] = sqp_run_5(course, biker, disc);

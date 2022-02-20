@@ -32,7 +32,7 @@ x = linspace(0,L,N);
 phi_dis = interp1(linspace(0,L,length(phi)),phi,x);
 g = 9.8; % m/s
 
-c1 = 0.5*rho*CdA;% air drag coefficient *** get equation
+c1 = 0.5*rho*CdA;% area air drag coefficient
 c2 = m.*g.*(sind(phi_dis) + Cr);
 c3 = m; % get eq ***
 

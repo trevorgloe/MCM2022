@@ -1,12 +1,9 @@
-clear
-close all
-clc
-
+% run a single time
 %% Flags ferda
 % course.curvature_flag = 1;
-
+clear
 %% Load Data
-distcalcs_verif;
+distcalcs_verif
 
 %% Set Params
 g = 9.81;   % acceleration due to gravity [m/s^2]
@@ -22,7 +19,14 @@ biker.Pm = 300; % max power [Watts]
 
 % Define course parameters
 course.L = 48.7e3;    %total course length [m]
-course.phi = [0 1 0];%   %angle of the slope of the course over the length of the course
+
+phinans = 4*inclination_5sample;
+phinans(find(isnan(phinans)))=0;
+phi = phinans;
+
+% slap a low pass filter on phi
+phi = lowpass(phi,0.05);
+
 course.rho = 1.1455; % density at location [kg/m^3]
 for ii = 1:length(R)
     if mod(ii,10) == 0
@@ -33,6 +37,12 @@ end
 course.r_c = r_c;
 course.headwind = 0;
 
+% make all r_c values 1 (cause im ignoring them)
+course.r_c = ones(1,100);
+course.beta = zeros(1,100);
+
+figure
+plot(phi)
 % Discretize course into lil chunky bits
 disc.N = length(course.r_c);    %number of chunks in discretization
 
@@ -41,8 +51,6 @@ disc.N = length(course.r_c);    %number of chunks in discretization
 convert_v2;
 time_values = Tf(end);
 all_params = {biker, course, disc};
+plotting
+save_data_params(all_params,v,P);
 
-%% Plotting
-plotting;
-
-%% Model Comparison

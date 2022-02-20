@@ -1,4 +1,4 @@
-function [v,P,x] = sqp_run_new(course, biker, disc)
+function [v,P,x] = sqp_run_new(course, biker, disc, qq)
 % Takes in rider and course struct and runs SQP based model
 % v5 Built off of sqp_run_new.m but considers the curvature of the track
 % v6 includes wind stuff
@@ -43,7 +43,6 @@ function [v,P,x] = sqp_run_new(course, biker, disc)
     function [c,ceq] = constraint(s)%,x,Pm,N,Wcap,CP,c1,c2,c3,tau_w)
         v = s(1:N);
         % disp('runnin')
-        
         % Add curvature consideration
 %          for ii = 1:N
 %             if (r_c(ii) == inf)
@@ -79,8 +78,12 @@ function [v,P,x] = sqp_run_new(course, biker, disc)
         x2 = repmat(x(1:30),1,ceil(length(x)/30));
         shifted_x = x2(1:N);
         
-        Wptot = Wcap;
-        Wptot = Wcap - sum((1-delta_v+delta_v.*exp(-shifted_x./(v*tau_w))).*(P-CP)*dx);
+        if qq == 3 || qq == 4
+            Wptot = Wcap - sum((1-delta_v+delta_v.*exp(-shifted_x./(v*tau_w))).*(P-CP)*dx)+1;
+        else
+            % Wptot = Wcap;
+            Wptot = Wcap - sum((1-delta_v+delta_v.*exp(-shifted_x./(v*tau_w))).*(P-CP)*dx);
+        end
 
         ceq = [Wptot P-Pcalc];
         

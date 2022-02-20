@@ -15,3 +15,6 @@ plot(x,P,'r')
 xlabel('x position')
 ylabel('P')
 title(['c',num2str(qq)])
+
+figure
+plot(course.phi)

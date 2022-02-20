@@ -67,16 +67,22 @@ function [v,P,x] = sqp_run_new(course, biker, disc, qq)
          % uncomment below if want no consideration of track curvature
         Cr = Cr0*ones(1,N);
         c2 = m.*g.*(sind(phi_dis) + Cr);
-    
+        
         % Backward difference approx for dvdt
         dvdt(1) =  (v(1))/(dx*v(1));
         for ii = 2:N
             dvdt(ii) = (v(ii) - v(ii-1))/(dx*v(ii));
         end
         
+
         % ineq constraint 1
         Pcalc = (c1.*(v-adj_headwind).^2 + c2 + c3.*dvdt).*v; 
+%         disp(min(Pcalc))
         P = s(N+1:end);
+        
+        if isnan(P-Pcalc)
+            disp('P nan')
+        end
         c = [];
         if c > 0
             disp('c not satisfied')
@@ -97,9 +103,11 @@ function [v,P,x] = sqp_run_new(course, biker, disc, qq)
             % Wptot = Wcap;
             Wptot = Wcap - sum((1-delta_v+delta_v.*exp(-shifted_x./(v*tau_w))).*(P-CP)*dx);
         end
-
+%         
+%         Wptot = 0;
         ceq = [Wptot P-Pcalc];
-        
+%         ceq = P-Pcalc;
+%         disp(min(abs(v)))
         if isnan(ceq)
             disp('AHHHHH')
             disp(ceq)
@@ -124,12 +132,12 @@ function [v,P,x] = sqp_run_new(course, biker, disc, qq)
     b = [ones(1,N)*10 ones(1,N)*Pm];
     Aeq = [];
     beq = [];
-    lb = zeros(1,2*N);
-    ub = [ones(1,N)*25 ones(1,N)*Pm];
-    ub(1) = 0.1;
+    lb = [ones(1,N) -1e10*ones(1,N)];
+    ub = [ones(1,N)*50 ones(1,N)*Pm];
+%     ub(1) = 0.1;
    
     %% Call fmincon
-    options = optimoptions('fmincon','Algorithm','sqp','MaxFunctionEvaluations',1e8,'StepTolerance',1e-8,'MaxIterations',1e2,'Display','iter');
+    options = optimoptions('fmincon','Algorithm','sqp','MaxFunctionEvaluations',1e8,'StepTolerance',1e-10,'MaxIterations',10e3,'Display','iter');
     % to display iterations :'Display','iter'
     s = fmincon(fun,s0,A,b,Aeq,beq,lb,ub,@constraint,options);
     v = s(1:N);

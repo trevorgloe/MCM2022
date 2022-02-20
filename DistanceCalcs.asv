@@ -161,13 +161,13 @@ sgtitle("Sampled Data");
 [~, ind] = unique(smooth_totaldist);
 F = griddedInterpolant(smooth_totaldist(ind),smooth_inclination(ind));
 
-interxq = linspace(0,smooth_totaldist(end),length(totaldist));
-intervq = F(interxq);
+xq = linspace(0,smooth_totaldist(end),length(totaldist));
+vq = F(xq);
 
 figure()
 plot(smooth_totaldist,smooth_inclination,'ro')
 hold on
-plot(interxq,intervq,'.')
+plot(xq,vq,'.')
 legend('Sample Points','Interpolated Values')
 
 disp("Mean inclination: ");
@@ -210,26 +210,7 @@ subplot(4,1,4)
 plot(totaldist,latlon(:,3));
 
 %% Plotting the map with Power
-F = griddedInterpolant(x,P);
+F = griddedInterpolant(smooth_totaldist(ind),smooth_inclination(ind));
 
-T = readtable('flanders_track_points.csv');
-latlon = table2array(T); % NOTE: column 3 in latlon is the elevation in ft
-
-xq = linspace(0,x(end),length(latlon));
-vq = F(xq)';
-
-% c = gradient(vq); % color gradient that scatter() is able to understand for some reason, god bless
-
-
-figure()
-subplot(1,2,1)
-scatter(latlon(:,1),latlon(:,2),10,intervq);
-colormap jet
-colorbar;
-title("Grade Data: ");
-
-subplot(1,2,2)
-scatter(latlon(:,1),latlon(:,2),10,vq);
-colormap jet
-colorbar;
-title("Power Data: ");
+xq = linspace(0,smooth_totaldist(end),length(totaldist));
+vq = F(xq);

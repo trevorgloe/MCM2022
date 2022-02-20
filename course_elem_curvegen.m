@@ -18,7 +18,7 @@ biker.tau_w = 500;   % W' recovery time constant
 biker.Pm = 300; % max power [Watts]
 
 % Discretize course into lil chunky bits
-disc.N = 200;    %number of chunks in discretization
+disc.N = 100;    %number of chunks in discretization
 
 %% Run Model
 for qq = 1:5

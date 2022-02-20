@@ -1,5 +1,4 @@
-%% Define parameters and discretize for sensitivity study
-
+% run a single time
 %% Define randome parameters
 g = 9.81;   % acceleration due to gravity [m/s^2]
 
@@ -11,8 +10,8 @@ Cr = 0.005;   % wheel resistance coefficient
 % CP = 142.8;   % rider critical power [Watts]
 CP = 180;
 Wcap = 24235;   % rider anaerobic work capacity [J]
-% tau_w = 500;   % W' recovery time constant
-Pm = 350; % max power [Watts]
+tau_w = 500;   % W' recovery time constant
+Pm = 225; % max power [Watts]
 
 biker.m = m;
 biker.Cr = Cr;
@@ -29,38 +28,22 @@ L = 13e3;    %total course length [m]
 % phi = [2 7 6 6 6 6 5 6 8 8 7 8 7.9];
 phi = [0 1 0];
 rho = 1.1455; % density at location [kg/m^3]
+beta = linspace(1,2*pi,N);      % angle of current velocity and headwind
+headwind = 5;   % [m/s]
 
 %structure to store course parameters
 course.L = L;
 course.phi = phi;
 course.rho = rho;
+course.beta = beta;
+course.headwind = headwind;
 
 %% Discretize course into lil chunky bits
 
 disc.N = 100;    %number of chunks in discretization
 N = disc.N;
 
-tau_w_vec = linspace(10,500,8);
-for i=1:length(Pm_vec)
-    % run the model 3 times with random initial conditions and take the
-    % best run
-    tau_w = tau_w_vec(i);
-    biker.tau_w = tau_w;
-    time_values = zeros(1,3);
-    Ptot = zeros(3,N);
-    vtot = zeros(3,N);
-    for j=1:3
-        sqp_solve;
-    	convert_v;
-        time_values(j)=Tf(end);
-        Ptot(j,:)=P;
-        vtot(j,:)=v;
-    end
-    best = find(time_values==min(time_values));
-    best_P = Ptot(best,:);
-    best_v = vtot(best,:);
-    all_params = {biker, course, disc};
-    save_data_params(all_params,best_v,best_P);
-end
-    
-
+% sqp_solve;
+[v,P,x] = sqp_run_new_wind(course, biker, disc);
+convert_v;
+plotting;

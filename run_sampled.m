@@ -1,5 +1,7 @@
-%% Define parameters and discretize for sensitivity study
+% run modeled for sampled parameters
 
+clear all
+close all
 %% Define randome parameters
 g = 9.81;   % acceleration due to gravity [m/s^2]
 
@@ -9,18 +11,18 @@ m = 66.25;
 Cr = 0.005;   % wheel resistance coefficient
 % biker.CdA = 0.194*0.1;   % drag coeff of area [m^2]   (drag coefficient of 0.1 is also in there)
 % CP = 142.8;   % rider critical power [Watts]
-CP = 180;
-Wcap = 24235;   % rider anaerobic work capacity [J]
+% CP = 180;
+% Wcap = 24235;   % rider anaerobic work capacity [J]
 % tau_w = 500;   % W' recovery time constant
-Pm = 350; % max power [Watts]
+% Pm = 350; % max power [Watts]
 
 biker.m = m;
 biker.Cr = Cr;
 % biker.CdA = A;
-biker.CP = CP;
-biker.Wcap = Wcap;
-biker.tau_w = tau_w;
-biker.Pm = Pm;
+% biker.CP = CP;
+% biker.Wcap = Wcap;
+% biker.tau_w = tau_w;
+% biker.Pm = Pm;
 biker.CdA = 0.194*0.1;   % drag coeff of area [m^2]   (drag coefficient of 0.1 is also in there)
 
 %% Define course parameters
@@ -40,27 +42,33 @@ course.rho = rho;
 disc.N = 100;    %number of chunks in discretization
 N = disc.N;
 
-tau_w_vec = linspace(10,500,8);
-for i=1:length(Pm_vec)
-    % run the model 3 times with random initial conditions and take the
-    % best run
-    tau_w = tau_w_vec(i);
-    biker.tau_w = tau_w;
-    time_values = zeros(1,3);
-    Ptot = zeros(3,N);
-    vtot = zeros(3,N);
-    for j=1:3
-        sqp_solve;
-    	convert_v;
-        time_values(j)=Tf(end);
-        Ptot(j,:)=P;
-        vtot(j,:)=v;
-    end
-    best = find(time_values==min(time_values));
-    best_P = Ptot(best,:);
-    best_v = vtot(best,:);
+sample_biker_params
+% sample parameters are stored in param_mesh
+
+
+for point = 1:length(param_mesh)
+    biker.CP = param_mesh(point).CP;
+    biker.Pm = param_mesh(point).Pm;
+    biker.Wcap = param_mesh(point).Wcap;
+    biker.tau_w = param_mesh(point).tau_w
+    
+    
+    sqp_solve;
+    convert_v;
+    
+    data_run(point).time = Tf(end);
+    data_run(point).P = P;
+    data_run(point).v = v;
+    
+    data_run(point).CP = param_mesh(point).CP;
+    data_run(point).Pm = param_mesh(point).Pm;
+    data_run(point).Wcap = param_mesh(point).Wcap;
+    data_run(point).tau_w = param_mesh(point).tau_w;
+    
     all_params = {biker, course, disc};
-    save_data_params(all_params,best_v,best_P);
+    save_data_params(all_params,v,P);
+    
 end
     
-
+    
+    

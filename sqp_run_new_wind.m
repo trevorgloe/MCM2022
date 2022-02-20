@@ -14,6 +14,7 @@ function [v,P,x] = sqp_run_new(course, biker, disc)
     L = course.L;
     phi = course.phi;
     rho = course.rho;
+    adj_headwind = course.headwind*cosd(course.beta);
     
     N = disc.N;
     
@@ -48,7 +49,7 @@ function [v,P,x] = sqp_run_new(course, biker, disc)
         end
         
         % ineq constraint 1
-        Pcalc = (c1.*v.^2 + c2 + c3.*dvdt).*v; 
+        Pcalc = (c1.*(v-adj_headwind).^2 + c2 + c3.*dvdt).*v; 
         P = s(N+1:end);
         c = [];
         if c > 0
@@ -97,7 +98,7 @@ function [v,P,x] = sqp_run_new(course, biker, disc)
     ub(1) = 0.1;
    
     %% Call fmincon
-    options = optimoptions('fmincon','Algorithm','sqp','MaxFunctionEvaluations',1e8,'StepTolerance',1e-10,'MaxIterations',10e3);
+    options = optimoptions('fmincon','Algorithm','sqp','MaxFunctionEvaluations',1e8,'StepTolerance',1e-10,'MaxIterations',10e3,'Display','iter');
     % to display iterations :'Display','iter'
     s = fmincon(fun,s0,A,b,Aeq,beq,lb,ub,@constraint,options);
     v = s(1:N);

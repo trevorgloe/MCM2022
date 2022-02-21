@@ -30,7 +30,7 @@ c3.phi = [0 -5 0];
 c3.rho = 1.1455; % density at location [kg/m^3]
 c3.r_c = 1; %*** needs fixed to run without
 c3.headwind = 0;
-c3p = [zeros(1,7) -5*ones(1,20) zeros(1,7)];
+
 %% c4 here
 % geom
 c4.L = 5e3;    %total course length [m]
@@ -40,7 +40,6 @@ c4.phi = linspace(5,-5,20) ; % [linspace(5,-5,20) linspace(5,-5,20) linspace(5,-
 c4.rho = 1.1455; % density at location [kg/m^3]
 c4.r_c = 1; %*** needs fixed to run without
 c4.headwind = 0;
-c4p = linspace(5,-5,20);
 
 %% c5
 % geom
@@ -50,7 +49,6 @@ c5.phi = linspace(-5,5,20);
 c5.rho = 1.1455; % density at location [kg/m^3]
 c5.r_c = 1; %*** needs fixed to run without
 c5.headwind = 0;
-c5p = linspace(-5,5,20);
 
 %% c6
 c6.L = 5e3;    %total course length [m]
@@ -74,14 +72,5 @@ c8.phi = [linspace(-5,5,20) zeros(1,20) linspace(-5,5,20)];
 c8.rho = 1.1455; % density at location [kg/m^3]
 c8.r_c = 1; %*** needs fixed to run without
 c8.headwind = 0;
-
-%% c9
-c9.L = 5e3;    %total course length [m]
-c9.phi = [c4p c4p c1p c1p ];
-% env
-c9.rho = 1.1455; % density at location [kg/m^3]
-c9.r_c = 1; %*** needs fixed to run without
-c9.headwind = 0;
-
 %% Combine
-c = [c1;c2;c3;c4;c5;c6;c7;c8;c9];
+c = [c1;c2;c3;c4;c5;c6;c7;c8];

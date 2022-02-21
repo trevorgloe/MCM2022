@@ -35,7 +35,6 @@ function [v,P,x] = sqp_run_new(course, biker, disc, qq)
     rw = 0.559/2;   %[m]
     Iw = 1/2*mw*rw^2;
     c3 = m + 2*Iw/rw^2; % effective mass of the rider and bike
-    
     %% F function
     fun = @(s) dx.*sum(1./s(1:N));
 %     function F = fun(s)
@@ -56,7 +55,7 @@ function [v,P,x] = sqp_run_new(course, biker, disc, qq)
 %             end
 %         end
         % disp('runnin')
-        % Add curvature consideration
+%         Add curvature consideration
 %          for ii = 1:N
 %             if (r_c(ii) == inf)
 %                 Cr(ii) = Cr0;
@@ -113,8 +112,7 @@ function [v,P,x] = sqp_run_new(course, biker, disc, qq)
             disp(ceq)
         end
         return
-    end
-    
+    end  
     %% fmincon arguments
     % create difference matrix
     A = eye(2*N);
@@ -132,12 +130,11 @@ function [v,P,x] = sqp_run_new(course, biker, disc, qq)
     b = [ones(1,N)*10 ones(1,N)*Pm];
     Aeq = [];
     beq = [];
-    lb = [ones(1,N) -1e10*ones(1,N)];
+    lb = [0.01*ones(1,N) -1e10*ones(1,N)];
     ub = [ones(1,N)*50 ones(1,N)*Pm];
-%     ub(1) = 0.1;
-   
+    ub(1) = 0.1;
     %% Call fmincon
-    options = optimoptions('fmincon','Algorithm','sqp','MaxFunctionEvaluations',1e8,'StepTolerance',1e-10,'MaxIterations',10e3,'Display','iter');
+    options = optimoptions('fmincon','Algorithm','sqp','MaxFunctionEvaluations',1e8,'StepTolerance',1e-8,'MaxIterations',10e3,'Display','iter');
     % to display iterations :'Display','iter'
     s = fmincon(fun,s0,A,b,Aeq,beq,lb,ub,@constraint,options);
     v = s(1:N);

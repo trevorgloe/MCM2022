@@ -19,7 +19,7 @@ c_m.CP = 320;
 c_m.Pm = 398;
 c_m.m = 62;
 c_m.Wcap = 45e3;
-c_m.tau_w = 10;
+c_m.tau_w = 10; %150
 c_m.CdA = 0.33;
 
 %% Cilmber Female
